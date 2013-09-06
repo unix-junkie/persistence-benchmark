@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.intersystems</groupId>
+	<artifactId>test-persistence-performance</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>10.9.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>11.2.0.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.intersystems</groupId>
+			<artifactId>cachejdbc</artifactId>
+			<version>2013.1.1.501.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.intersystems</groupId>
+			<artifactId>cacheextreme</artifactId>
+			<version>2013.1.1.501.1</version>
+		</dependency>
+	</dependencies>
+</project>
