@@ -26,7 +26,7 @@ public final class Cach\u00e9ExtremePersister implements Persister {
 
 	/**
 	 * Whether to suspend journalling when inserting (<em>unsafe</em>).
-	 * The dafault is {@false}.
+	 * The default is {@false}.
 	 */
 	private final boolean suspendJournalling;
 
