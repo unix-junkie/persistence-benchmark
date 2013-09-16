@@ -6,6 +6,7 @@ package com.intersystems.persistence;
 import static java.sql.DriverManager.getConnection;
 
 import java.sql.DatabaseMetaData;
+import java.sql.Driver;
 import java.sql.SQLException;
 
 import org.apache.derby.jdbc.EmbeddedDriver;
@@ -16,38 +17,37 @@ import org.apache.derby.jdbc.EmbeddedDriver;
 public final class DerbyPersister extends JdbcPersister {
 	private static final String DBNAME = "XEP";
 
+	private final DerbyConnectionParameters connectionParameters = new DerbyConnectionParameters();
+
 	public DerbyPersister(final boolean autoCommit) {
 		super("jdbc:derby:" + DBNAME + ";create=true", autoCommit);
+		this.connectionParameters.setDatabaseName(DBNAME);
+		this.connectionParameters.setAutoCommit(autoCommit);
 	}
 
 	/**
-	 * @see Persister#getName()
+	 * @see Persister#getClientVersion()
 	 */
 	@Override
-	public String getName() {
-		return "Apache Derby (auto-commit: " + this.autoCommit + ")";
+	public String getClientVersion() {
+		final Driver driver = new EmbeddedDriver();
+		return "Apache Derby " + driver.getMajorVersion() + '.' + driver.getMinorVersion() + " (auto-commit: " + this.autoCommit + ")";
 	}
 
 	/**
-	 * @see JdbcPersister#dispose(boolean)
+	 * @see JdbcPersister#tearDown()
 	 */
 	@Override
-	public void dispose(final boolean debug) {
-		super.dispose(debug);
+	public void tearDown() {
+		super.tearDown();
 
-		if (debug) {
-			System.out.print("Shutting Derby instance '" + DBNAME + "' down... ");
-		}
 		try {
 			getConnection("jdbc:derby:" + DBNAME + ";shutdown=true");
-			if (debug) {
-				System.out.println("failed.");
-			}
+			System.out.println("Failed to shut down Derby instance '" + DBNAME + '\'');
 		} catch (final SQLException sqle) {
-			if (debug) {
-				System.out.println("done.");
-				System.out.println(sqle.getMessage());
-			}
+			/*
+			 * Ignore: an exception is always thrown on shutdown.
+			 */
 		}
 	}
 
@@ -65,5 +65,13 @@ public final class DerbyPersister extends JdbcPersister {
 	@Override
 	protected String getCreateSql(final DatabaseMetaData metaData) {
 		return "create table events(ticker varchar(32) not null, per int not null, timestamp timestamp not null, \"LAST\" double not null, vol bigint not null)";
+	}
+
+	/**
+	 * @see Persister#getConnectionParameters()
+	 */
+	@Override
+	public DerbyConnectionParameters getConnectionParameters() {
+		return this.connectionParameters;
 	}
 }

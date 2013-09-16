@@ -3,11 +3,10 @@
  */
 package com.intersystems.persistence;
 
-import static com.intersys.util.VersionInfo.getClientVersion;
-
 import java.sql.DatabaseMetaData;
 
 import com.intersys.jdbc.CacheDriver;
+import com.intersys.util.VersionInfo;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
@@ -34,11 +33,11 @@ public final class Cach\u00e9JdbcPersister extends JdbcPersister {
 	}
 
 	/**
-	 * @see Persister#getName()
+	 * @see Persister#getClientVersion()
 	 */
 	@Override
-	public String getName() {
-		return "InterSystems Cach\u00e9 " + getClientVersion() + " (auto-commit: " + this.autoCommit + ")";
+	public String getClientVersion() {
+		return "InterSystems Cach\u00e9 " + VersionInfo.getClientVersion() + " (auto-commit: " + this.autoCommit + ")";
 	}
 
 	/**
@@ -55,5 +54,13 @@ public final class Cach\u00e9JdbcPersister extends JdbcPersister {
 	@Override
 	protected String getCreateSql(final DatabaseMetaData metaData) {
 		return "create table events(ticker %String(MAXLEN=32) not null, per %Integer(MINVAL=" + Integer.MIN_VALUE + ", MAXVAL=" + Integer.MAX_VALUE + ") not null, timestamp %TimeStamp not null, \"LAST\" %Double not null, vol %Integer(MINVAL=" + Long.MIN_VALUE + ", MAXVAL=" + Long.MAX_VALUE + ") not null)";
+	}
+
+	/**
+	 * @see Persister#getConnectionParameters()
+	 */
+	@Override
+	public Cach\u00e9JdbcConnectionParameters getConnectionParameters() {
+		return new Cach\u00e9JdbcConnectionParameters();
 	}
 }

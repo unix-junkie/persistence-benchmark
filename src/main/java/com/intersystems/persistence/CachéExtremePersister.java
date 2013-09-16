@@ -3,12 +3,10 @@
  */
 package com.intersystems.persistence;
 
-import static com.intersys.util.VersionInfo.getClientVersion;
-import static java.util.Arrays.asList;
-
 import java.sql.DatabaseMetaData;
 
 import com.intersys.globals.GlobalsException;
+import com.intersys.util.VersionInfo;
 import com.intersys.xep.EventPersister;
 import com.intersys.xep.PersisterFactory;
 import com.intersys.xep.annotations.Id;
@@ -16,7 +14,7 @@ import com.intersys.xep.annotations.Id;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class Cach\u00e9ExtremePersister implements Persister {
+public final class Cach\u00e9ExtremePersister extends AbstractPersister {
 	private final String namespace;
 
 	private final String user;
@@ -111,21 +109,21 @@ public final class Cach\u00e9ExtremePersister implements Persister {
 	}
 
 	/**
-	 * @see Persister#getName()
+	 * @see Persister#getClientVersion()
 	 */
 	@Override
-	public String getName() {
-		return "InterSystems Cach\u00e9 eXtreme " + getClientVersion()
+	public String getClientVersion() {
+		return "InterSystems Cach\u00e9 eXtreme " + VersionInfo.getClientVersion()
 				+ " (" + (this.useShm() ? "SHM" : "TCP") + "; "
 				+ (this.suspendJournalling ? '-' : '+') + "J; "
 				+ (this.flatSchema ? "flat" : "full") + " schema)";
 	}
 
 	/**
-	 * @see Persister#setUp(boolean)
+	 * @see Persister#setUp()
 	 */
 	@Override
-	public void setUp(final boolean debug) {
+	public void setUp() {
 		this.persister = PersisterFactory.createPersister();
 
 		if (this.useShm()) {
@@ -147,17 +145,19 @@ public final class Cach\u00e9ExtremePersister implements Persister {
 			}
 		}
 		try {
-			if (debug) {
-				final DatabaseMetaData metaData = this.persister.getJDBCConnection().getMetaData();
-				System.out.println("Connected to " + metaData.getDatabaseProductName() + ", version " + metaData.getDatabaseProductVersion() + " at " + metaData.getURL());
-				System.out.println("Server version: " + this.persister.callClassMethod("%SYSTEM.Version", "GetVersion"));
-			}
+			final DatabaseMetaData metaData = this.persister.getJDBCConnection().getMetaData();
+			this.setServerVersion(metaData.getDatabaseProductName() + ", version " + metaData.getDatabaseProductVersion() + " at " + metaData.getURL() + '\n'
+					+ this.persister.callClassMethod("%SYSTEM.Version", "GetVersion"));
+			this.setRunning(true);
 
-			if (this.suspendJournalling) {
+			final int major = metaData.getDatabaseMajorVersion();
+			final int minor = metaData.getDatabaseMinorVersion();
+			final boolean is20132Plus = major > 2013 || major == 2013 && minor >= 2;
+			if (this.suspendJournalling && is20132Plus) {
+				/*
+				 * We're only suspending journalling on 2013.2+ (see below).
+				 */
 				this.persister.callProcedure("DISABLE", "%NOJRN");
-				if (debug) {
-					System.out.println("Journalling disabled.");
-				}
 			}
 
 			final String cach\u00e9ClassName = Event.class.getName();
@@ -170,11 +170,10 @@ public final class Cach\u00e9ExtremePersister implements Persister {
 			 */
 			this.persister.deleteExtent(cach\u00e9ClassName);
 
-			final String cach\u00e9Classes[] = this.flatSchema
-					? this.persister.importSchema(cach\u00e9ClassName)
-					: this.persister.importSchemaFull(cach\u00e9ClassName);
-			if (debug) {
-				System.out.println("Schema imported: " + asList(cach\u00e9Classes));
+			if (this.flatSchema) {
+				this.persister.importSchema(cach\u00e9ClassName);
+			} else {
+				this.persister.importSchemaFull(cach\u00e9ClassName);
 			}
 
 			this.persisterEvent = this.persister.getEvent(cach\u00e9ClassName);
@@ -210,10 +209,10 @@ public final class Cach\u00e9ExtremePersister implements Persister {
 	}
 
 	/**
-	 * @see Persister#dispose(boolean)
+	 * @see Persister#tearDown()
 	 */
 	@Override
-	public void dispose(final boolean debug) {
+	public void tearDown() {
 		try {
 			if (this.persisterEvent != null) {
 				this.persisterEvent.close();
@@ -221,9 +220,6 @@ public final class Cach\u00e9ExtremePersister implements Persister {
 
 			if (this.suspendJournalling && this.isConnected()) {
 				this.persister.callProcedure("ENABLE", "%NOJRN");
-				if (debug) {
-					System.out.println("Journalling re-enabled.");
-				}
 			}
 		} catch (final Exception e) {
 			e.printStackTrace(System.out);
@@ -235,13 +231,12 @@ public final class Cach\u00e9ExtremePersister implements Persister {
 		} finally {
 			if (this.persister != null) {
 				this.persister.close();
-				if (debug) {
-					System.out.println("Disconnected from " + this.getName());
-				}
 			}
 
 			this.persister = null;
 			this.persisterEvent = null;
+
+			this.setRunning(false);
 		}
 	}
 
@@ -251,5 +246,13 @@ public final class Cach\u00e9ExtremePersister implements Persister {
 
 	private boolean isConnected() {
 		return this.persisterEvent != null;
+	}
+
+	/**
+	 * @see Persister#getConnectionParameters()
+	 */
+	@Override
+	public Cach\u00e9ExtremeConnectionParameters getConnectionParameters() {
+		return new Cach\u00e9ExtremeConnectionParameters();
 	}
 }

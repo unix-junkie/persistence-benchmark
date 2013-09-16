@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public abstract class JdbcPersister implements Persister {
+public abstract class JdbcPersister extends AbstractPersister {
 	private final String url;
 
 	protected final boolean autoCommit;
@@ -54,11 +54,11 @@ public abstract class JdbcPersister implements Persister {
 	}
 
 	/**
-	 * @see Persister#setUp(boolean)
+	 * @see Persister#setUp()
 	 */
 	@Override
-	public final void setUp(final boolean debug) {
-		this.initConnection(debug);
+	public final void setUp() {
+		this.initConnection();
 
 		if (this.conn == null) {
 			this.pstmt = null;
@@ -112,29 +112,24 @@ public abstract class JdbcPersister implements Persister {
 	}
 
 	/**
-	 * @see Persister#dispose(boolean)
+	 * @see Persister#tearDown()
 	 */
 	@Override
-	public void dispose(final boolean debug) {
+	public void tearDown() {
 		if (this.conn != null) {
 			try {
 				this.conn.commit();
 			} catch (final SQLException sqle) {
-				if (debug) {
-					System.out.println(sqle.getMessage());
-				}
+				System.out.println(sqle.getMessage());
 			}
 			try {
 				this.conn.close();
-				if (debug) {
-					System.out.println("Connection to " + this.getName() + " closed");
-				}
 			} catch (final SQLException sqle) {
-				if (debug) {
-					System.out.println(sqle.getMessage());
-				}
+				System.out.println(sqle.getMessage());
 			}
 		}
+
+		this.setRunning(false);
 	}
 
 	protected abstract Class<? extends Driver> getDriverClass();
@@ -144,17 +139,16 @@ public abstract class JdbcPersister implements Persister {
 	 */
 	protected abstract String getCreateSql(final DatabaseMetaData metaData);
 
-	private void initConnection(final boolean debug) {
+	private void initConnection() {
 		try {
 			Class.forName(this.getDriverClass().getName());
 			this.conn = this.username == null || this.username.length() == 0
 					? DriverManager.getConnection(this.url)
 					: DriverManager.getConnection(this.url, this.username, this.password);
 			this.conn.setAutoCommit(this.autoCommit);
-			if (debug) {
-				final DatabaseMetaData metaData = this.conn.getMetaData();
-				System.out.println("Connected to " + metaData.getDatabaseProductName() + ", version " + metaData.getDatabaseProductVersion() + " at " + metaData.getURL());
-			}
+			final DatabaseMetaData metaData = this.conn.getMetaData();
+			this.setServerVersion(metaData.getDatabaseProductName() + ", version " + metaData.getDatabaseProductVersion() + " at " + metaData.getURL());
+			this.setRunning(true);
 		} catch (final ClassNotFoundException cnfe) {
 			System.out.println(cnfe.getMessage());
 		} catch (final SQLException sqle) {

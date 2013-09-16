@@ -4,166 +4,124 @@
 package com.intersystems.persistence;
 
 import static java.lang.System.currentTimeMillis;
-import static java.lang.System.getProperty;
-import static javax.swing.JFileChooser.APPROVE_OPTION;
-import static javax.swing.JFileChooser.FILES_ONLY;
-import static javax.swing.JFileChooser.OPEN_DIALOG;
+import static java.util.Arrays.asList;
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
+import com.intersystems.persistence.ui.CachéJdbcConnectionParametersPanel;
+import com.intersystems.persistence.ui.ConnectionParametersPanel;
+import com.intersystems.persistence.ui.DerbyConnectionParametersPanel;
+import com.intersystems.persistence.ui.MainFrame;
+import com.intersystems.persistence.ui.OracleConnectionParametersPanel;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-abstract class TestPersistencePerformance {
-	private static boolean INCLUDE_WARM_UP_CYCLE = false;
-
-	private static final Persister PERSISTERS[] = {
-		new InMemoryPersister(true),
-
-		new DerbyPersister(false),
-		new DerbyPersister(true),
-		/*
-		 * Oracle 9i
-		 */
-		new OraclePersister("mintaka", 1521, "MINTAKA", "XEP", "XEP", false),
-		new OraclePersister("mintaka", 1521, "MINTAKA", "XEP", "XEP", true),
-		new OraclePersister("mintaka", 1521, "MINTAKA", "XEPNOLOGGING", "XEP", false),
-		new OraclePersister("mintaka", 1521, "MINTAKA", "XEPNOLOGGING", "XEP", true),
-		/*
-		 * Oracle 11g
-		 */
-		new OraclePersister("rigel", 1521, "ORCL", "XEP", "XEP", false),
-		new OraclePersister("rigel", 1521, "ORCL", "XEP", "XEP", true),
-		/*
-		 * Oracle 11g XE
-		 */
-		new OraclePersister("hatsya", 1521, "XE", "XEP", "XEP", false),
-		new OraclePersister("hatsya", 1521, "XE", "XEP", "XEP", true),
-
-		new Cach\u00e9JdbcPersister("localhost", 56776, "XEP", "_SYSTEM", "SYS", false),
-		new Cach\u00e9JdbcPersister("localhost", 56776, "XEP", "_SYSTEM", "SYS", true),
-		new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false),
-		new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false, "localhost", 56776),
-	};
+public abstract class TestPersistencePerformance {
+	private static final ExecutorService BACKGROUND = newSingleThreadExecutor();
 
 	private TestPersistencePerformance() {
 		assert false;
 	}
 
-	private static void process0(final Persister persister, final File ... files) throws IOException {
-		for (final File file : files) {
-			final BufferedReader in = new BufferedReader(new FileReader(file));
-			try {
-				String line;
-				long localCount = 0;
-				while ((line = in.readLine()) != null) {
-					/*
-					 * Skip the header row.
-					 */
-					if (localCount++ == 0) {
-						continue;
-					}
-					persister.persist(Event.valueOf(line));
-				}
-			} finally {
-				in.close();
-			}
-		}
+	/**
+	 * @param task
+	 */
+	public static void submit(final Runnable task) {
+		BACKGROUND.submit(task);
 	}
 
-	private static void process(final Persister persister, final File ... files) throws IOException {
+	public static void process(final Persister persister, final File ... files) {
 		final long t0 = currentTimeMillis();
 		long count = 0;
 		for (final File file : files) {
-			final BufferedReader in = new BufferedReader(new FileReader(file));
 			try {
-				String line;
-				long localCount = 0;
-				while ((line = in.readLine()) != null) {
-					/*
-					 * Skip the header row.
-					 */
-					if (localCount++ == 0) {
-						continue;
+				final BufferedReader in = new BufferedReader(new FileReader(file));
+				try {
+					String line;
+					long localCount = 0;
+					while ((line = in.readLine()) != null) {
+						/*
+						 * Skip the header row.
+						 */
+						if (localCount++ == 0) {
+							continue;
+						}
+						persister.persist(Event.valueOf(line));
 					}
-					persister.persist(Event.valueOf(line));
+					/*
+					 * Account for the header row
+					 */
+					if (localCount > 0) {
+						localCount--;
+					}
+					count += localCount;
+				} finally {
+					in.close();
 				}
-				/*
-				 * Account for the header row
-				 */
-				if (localCount > 0) {
-					localCount--;
-				}
-				count += localCount;
-			} finally {
-				in.close();
+			} catch (final IOException ioe) {
+				System.out.println(ioe.getMessage());
 			}
 		}
 		final long t1 = currentTimeMillis();
-		final double seconds = (t1 - t0) / 1e3;
-		System.out.println(count + " event(s) in " + seconds + " second(s) (" + (long) (count / seconds) + " eps).");
+		persister.setTestResult(new TestResult(count, t1 - t0));
 	}
 
 	/**
 	 * @param args
 	 * @throws IOException
 	 */
-	public static void main(final String args[]) throws IOException {
-		final File selectedFiles[];
-		if (args.length == 0) {
-			final JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setCurrentDirectory(new File(getProperty("user.dir")));
-			fileChooser.setAcceptAllFileFilterUsed(false);
-			fileChooser.setFileSelectionMode(FILES_ONLY);
-			fileChooser.setDialogType(OPEN_DIALOG);
-			fileChooser.setMultiSelectionEnabled(true);
-			fileChooser.setFileFilter(new FileFilter() {
-				@Override
-				public String getDescription() {
-					return "Comma-Separated Values (*.csv)";
-				}
+	public static void main(final String args[]) {
+		final DerbyPersister derbyPersister = new DerbyPersister(true);
 
-				@Override
-				public boolean accept(final File f) {
-					return f.isDirectory() || f.getName().toLowerCase().endsWith(".csv");
-				}
-			});
-			final int option = fileChooser.showOpenDialog(null);
-			if (option != APPROVE_OPTION) {
-				return;
-			}
-			selectedFiles = fileChooser.getSelectedFiles();
-		} else {
-			selectedFiles = new File[args.length];
-			for (int i = 0, n = args.length; i < n; i++) {
-				selectedFiles[i] = new File(args[i]);
-			}
-		}
+		/*
+		 * Oracle 9i
+		 */
+//		final OraclePersister oraclePersister = new OraclePersister("mintaka", 1521, "MINTAKA", "XEP", "XEP", false);
+//		final OraclePersister oraclePersister = new OraclePersister("mintaka", 1521, "MINTAKA", "XEP", "XEP", true);
+//		final OraclePersister oraclePersister = new OraclePersister("mintaka", 1521, "MINTAKA", "XEPNOLOGGING", "XEP", false);
+//		final OraclePersister oraclePersister = new OraclePersister("mintaka", 1521, "MINTAKA", "XEPNOLOGGING", "XEP", true);
+		/*
+		 * Oracle 11g
+		 */
+//		final OraclePersister oraclePersister = new OraclePersister("rigel", 1521, "ORCL", "XEP", "XEP", false);
+//		final OraclePersister oraclePersister = new OraclePersister("rigel", 1521, "ORCL", "XEP", "XEP", true);
+		/*
+		 * Oracle 11g XE
+		 */
+//		final OraclePersister oraclePersister = new OraclePersister("hatsya", 1521, "XE", "XEP", "XEP", false);
+		final OraclePersister oraclePersister = new OraclePersister("hatsya", 1521, "XE", "XEP", "XEP", true);
 
-		for (final Persister persister : PERSISTERS) {
-			System.out.println(persister.getName());
+//		final Cach\u00e9JdbcPersister cach\u00e9JdbcPersister = new Cach\u00e9JdbcPersister("localhost", 56776, "XEP", "_SYSTEM", "SYS", false);
+		final Cach\u00e9JdbcPersister cach\u00e9JdbcPersister = new Cach\u00e9JdbcPersister("localhost", 56776, "XEP", "_SYSTEM", "SYS", true);
 
-			/*
-			 * Dry-run warm-up cycle
-			 */
-			if (INCLUDE_WARM_UP_CYCLE) {
-				persister.setUp(false);
-				for (int i = 0; i < 10; i++) {
-					process0(persister, selectedFiles);
-				}
-				persister.dispose(false);
-			}
+		final Persister persisters[] = {
+			derbyPersister,
+			oraclePersister,
+			cach\u00e9JdbcPersister,
 
-			persister.setUp(true);
-			process(persister, selectedFiles);
-			persister.dispose(true);
-			System.out.println();
-		}
+			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false),
+			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false, "localhost", 56776),
+			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", true, false),
+			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", true, false, "localhost", 56776),
+		};
+
+		final ConnectionParametersPanel<?> connectionProperties[] = {
+			new DerbyConnectionParametersPanel(derbyPersister.getConnectionParameters()),
+			new OracleConnectionParametersPanel(oraclePersister.getConnectionParameters()),
+			new Cach\u00e9JdbcConnectionParametersPanel(cach\u00e9JdbcPersister.getConnectionParameters()),
+		};
+
+		final MainFrame frame = new MainFrame(asList(persisters),
+				asList(connectionProperties));
+		frame.pack();
+		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		frame.setVisible(true);
 	}
 }

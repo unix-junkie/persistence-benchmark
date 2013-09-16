@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class InMemoryPersister implements Persister {
+public final class InMemoryPersister extends AbstractPersister {
 	public int hash;
 
 	private final boolean keepEvents;
@@ -22,21 +22,22 @@ public final class InMemoryPersister implements Persister {
 	}
 
 	/**
-	 * @see Persister#getName()
+	 * @see Persister#getClientVersion()
 	 */
 	@Override
-	public String getName() {
+	public String getClientVersion() {
 		return "In-Memory Persister (" + (this.keepEvents ? "keeping" : "discarding") + " events)";
 	}
 
 	/**
-	 * @see Persister#setUp(boolean)
+	 * @see Persister#setUp()
 	 */
 	@Override
-	public void setUp(final boolean debug) {
+	public void setUp() {
 		this.events = this.keepEvents
 				? new ArrayList<Event>()
 				: Collections.<Event>emptyList();
+		this.setRunning(true);
 	}
 
 	/**
@@ -52,10 +53,19 @@ public final class InMemoryPersister implements Persister {
 	}
 
 	/**
-	 * @see com.intersystems.persistence.Persister#dispose()
+	 * @see Persister#tearDown()
 	 */
 	@Override
-	public void dispose(final boolean debug) {
+	public void tearDown() {
 		this.events.clear();
+		this.setRunning(false);
+	}
+
+	/**
+	 * @see Persister#getConnectionParameters()
+	 */
+	@Override
+	public ConnectionParameters<InMemoryPersister> getConnectionParameters() {
+		throw new UnsupportedOperationException();
 	}
 }

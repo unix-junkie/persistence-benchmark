@@ -3,24 +3,43 @@
  */
 package com.intersystems.persistence;
 
+import javax.swing.DefaultListModel;
+
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
 public interface Persister {
-	String getName();
+	String getClientVersion();
+
+	String getServerVersion();
+
+	boolean isRunning();
 
 	/**
-	 * @param debug
+	 * @param testResult
 	 */
-	void setUp(final boolean debug);
+	void setTestResult(final TestResult testResult);
+
+	String getTestResultMessage();
+
+	/**
+	 * @param listModel
+	 * @param index
+	 */
+	void setListModel(DefaultListModel listModel, final int index);
+
+	/**
+	 * @return a shared copy used for state transfer.
+	 */
+	ConnectionParameters<?> getConnectionParameters();
+
+
+	void setUp();
 
 	/**
 	 * @param event
 	 */
 	void persist(final Event event);
 
-	/**
-	 * @param debug
-	 */
-	void dispose(final boolean debug);
+	void tearDown();
 }

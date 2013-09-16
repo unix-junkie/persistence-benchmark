@@ -43,10 +43,10 @@ public final class OraclePersister extends JdbcPersister {
 	}
 
 	/**
-	 * @see Persister#getName()
+	 * @see Persister#getClientVersion()
 	 */
 	@Override
-	public String getName() {
+	public String getClientVersion() {
 		return "Oracle " + getDriverVersion() + " (auto-commit: " + this.autoCommit + ")";
 	}
 
@@ -82,5 +82,13 @@ public final class OraclePersister extends JdbcPersister {
 		} catch (final SQLException sqle) {
 			return false;
 		}
+	}
+
+	/**
+	 * @see Persister#getConnectionParameters()
+	 */
+	@Override
+	public OracleConnectionParameters getConnectionParameters() {
+		return new OracleConnectionParameters();
 	}
 }
