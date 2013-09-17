@@ -3,6 +3,7 @@
  */
 package com.intersystems.persistence;
 
+import static java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
@@ -120,8 +121,9 @@ public abstract class TestPersistencePerformance {
 
 		final MainFrame frame = new MainFrame(asList(persisters),
 				asList(connectionProperties));
-		frame.pack();
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		frame.setBounds(getLocalGraphicsEnvironment().getMaximumWindowBounds());
+		frame.validate();
 		frame.setVisible(true);
 	}
 }
