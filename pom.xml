@@ -1,9 +1,16 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!-- $Id$ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.intersystems</groupId>
 	<artifactId>test-persistence-performance</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+
+	<properties>
+		<intersystems.cache.version>2013.2.0.449.0</intersystems.cache.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.derby</groupId>
@@ -18,12 +25,12 @@
 		<dependency>
 			<groupId>com.intersystems</groupId>
 			<artifactId>cachejdbc</artifactId>
-			<version>2013.2.0.449.0</version>
+			<version>${intersystems.cache.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.intersystems</groupId>
 			<artifactId>cacheextreme</artifactId>
-			<version>2013.2.0.449.0</version>
+			<version>${intersystems.cache.version}</version>
 		</dependency>
 	</dependencies>
 </project>
