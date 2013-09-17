@@ -73,8 +73,6 @@ public final class MainFrame extends JFrame {
 			final List<ConnectionParametersPanel<?>> connectionParameters) {
 		this.setTitle("Persistence Performance");
 		final GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWeights = new double[] { 0.0 };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0 };
 		this.getContentPane().setLayout(gridBagLayout);
 
 		final JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
