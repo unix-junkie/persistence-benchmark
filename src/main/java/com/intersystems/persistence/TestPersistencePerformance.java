@@ -99,7 +99,7 @@ public abstract class TestPersistencePerformance {
 		final OraclePersister oraclePersister = new OraclePersister("hatsya", 1521, "XE", "XEP", "XEP", true);
 
 //		final Cach\u00e9JdbcPersister cach\u00e9JdbcPersister = new Cach\u00e9JdbcPersister("localhost", 56776, "XEP", "_SYSTEM", "SYS", false);
-		final Cach\u00e9JdbcPersister cach\u00e9JdbcPersister = new Cach\u00e9JdbcPersister("localhost", 56776, "XEP", "_SYSTEM", "SYS", true);
+		final Cach\u00e9JdbcPersister cach\u00e9JdbcPersister = new Cach\u00e9JdbcPersister("localhost", 56777, "XEP", "_SYSTEM", "SYS", true);
 
 		final Persister persisters[] = {
 			derbyPersister,
@@ -107,9 +107,9 @@ public abstract class TestPersistencePerformance {
 			cach\u00e9JdbcPersister,
 
 			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false),
-			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false, "localhost", 56776),
+			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false, "localhost", 56777),
 			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", true, false),
-			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", true, false, "localhost", 56776),
+			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", true, false, "localhost", 56777),
 		};
 
 		final ConnectionParametersPanel<?> connectionProperties[] = {

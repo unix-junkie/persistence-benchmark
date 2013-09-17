@@ -18,12 +18,12 @@
 		<dependency>
 			<groupId>com.intersystems</groupId>
 			<artifactId>cachejdbc</artifactId>
-			<version>2013.1.2.601.0</version>
+			<version>2013.2.0.449.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.intersystems</groupId>
 			<artifactId>cacheextreme</artifactId>
-			<version>2013.1.2.601.0</version>
+			<version>2013.2.0.449.0</version>
 		</dependency>
 	</dependencies>
 </project>
