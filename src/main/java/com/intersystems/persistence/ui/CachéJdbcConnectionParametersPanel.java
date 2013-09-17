@@ -5,8 +5,8 @@ package com.intersystems.persistence.ui;
 
 import java.awt.Component;
 
-import com.intersystems.persistence.CachéJdbcConnectionParameters;
-import com.intersystems.persistence.CachéJdbcPersister;
+import com.intersystems.persistence.Cach\u00e9JdbcConnectionParameters;
+import com.intersystems.persistence.Cach\u00e9JdbcPersister;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;

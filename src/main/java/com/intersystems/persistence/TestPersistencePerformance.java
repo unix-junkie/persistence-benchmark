@@ -15,7 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 
-import com.intersystems.persistence.ui.CachéJdbcConnectionParametersPanel;
+import com.intersystems.persistence.ui.Cach\u00e9JdbcConnectionParametersPanel;
 import com.intersystems.persistence.ui.ConnectionParametersPanel;
 import com.intersystems.persistence.ui.DerbyConnectionParametersPanel;
 import com.intersystems.persistence.ui.MainFrame;
