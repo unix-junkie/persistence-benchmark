@@ -38,6 +38,10 @@ public abstract class TestPersistencePerformance {
 		BACKGROUND.submit(task);
 	}
 
+	/**
+	 * @param persister
+	 * @param files
+	 */
 	public static void process(final Persister persister, final File ... files) {
 		final long t0 = currentTimeMillis();
 		long count = 0;
