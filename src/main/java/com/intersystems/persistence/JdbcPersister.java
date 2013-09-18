@@ -58,7 +58,7 @@ public abstract class JdbcPersister extends AbstractPersister {
 	 * @see Persister#setUp()
 	 */
 	@Override
-	public final TestResult setUp() {
+	public TestResult setUp() {
 		try {
 			this.initConnection();
 		} catch (final ClassNotFoundException cnfe) {

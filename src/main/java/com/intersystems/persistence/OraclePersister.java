@@ -8,6 +8,7 @@ import static oracle.jdbc.OracleDriver.getDriverVersion;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Locale;
 
 import oracle.jdbc.OracleDriver;
 
@@ -21,6 +22,8 @@ public final class OraclePersister extends JdbcPersister {
 		 */
 		setProperty("oracle.jdbc.timezoneAsRegion", "false");
 	}
+
+	private static final Locale DEFAULT_LOCALE = Locale.getDefault();
 
 	/**
 	 * @param host
@@ -40,6 +43,32 @@ public final class OraclePersister extends JdbcPersister {
 				autoCommit,
 				username,
 				password);
+	}
+
+	/**
+	 * @see JdbcPersister#setUp()
+	 */
+	@Override
+	public TestResult setUp() {
+		/*
+		 * Should prevent ORA-00604/ORA-12705 when connecting to XE instances.
+		 */
+		Locale.setDefault(Locale.US);
+
+		return super.setUp();
+	}
+
+	/**
+	 * @see JdbcPersister#tearDown()
+	 */
+	@Override
+	public void tearDown() {
+		super.tearDown();
+
+		/*
+		 * Restore the original locale value.
+		 */
+		Locale.setDefault(DEFAULT_LOCALE);
 	}
 
 	/**
