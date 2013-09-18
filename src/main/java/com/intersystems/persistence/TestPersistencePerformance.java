@@ -87,25 +87,8 @@ public abstract class TestPersistencePerformance {
 	public static void main(final String args[]) {
 		final DerbyPersister derbyPersister = new DerbyPersister(true);
 
-		/*
-		 * Oracle 9i
-		 */
-//		final OraclePersister oraclePersister = new OraclePersister("mintaka", 1521, "MINTAKA", "XEP", "XEP", false);
-//		final OraclePersister oraclePersister = new OraclePersister("mintaka", 1521, "MINTAKA", "XEP", "XEP", true);
-//		final OraclePersister oraclePersister = new OraclePersister("mintaka", 1521, "MINTAKA", "XEPNOLOGGING", "XEP", false);
-//		final OraclePersister oraclePersister = new OraclePersister("mintaka", 1521, "MINTAKA", "XEPNOLOGGING", "XEP", true);
-		/*
-		 * Oracle 11g
-		 */
-//		final OraclePersister oraclePersister = new OraclePersister("rigel", 1521, "ORCL", "XEP", "XEP", false);
-//		final OraclePersister oraclePersister = new OraclePersister("rigel", 1521, "ORCL", "XEP", "XEP", true);
-		/*
-		 * Oracle 11g XE
-		 */
-//		final OraclePersister oraclePersister = new OraclePersister("hatsya", 1521, "XE", "XEP", "XEP", false);
 		final OraclePersister oraclePersister = new OraclePersister("hatsya", 1521, "XE", "XEP", "XEP", true);
 
-//		final Cach\u00e9JdbcPersister cach\u00e9JdbcPersister = new Cach\u00e9JdbcPersister("ashcheglov", 56777, "XEP", "_SYSTEM", "SYS", false);
 		final Cach\u00e9JdbcPersister cach\u00e9JdbcPersister = new Cach\u00e9JdbcPersister("ashcheglov", 56777, "XEP", "_SYSTEM", "SYS", true);
 
 		final Persister persisters[] = {
@@ -115,8 +98,6 @@ public abstract class TestPersistencePerformance {
 
 			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false),
 			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false, "ashcheglov", 56777),
-			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", true, false),
-			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", true, false, "ashcheglov", 56777),
 		};
 
 		try {
