@@ -39,10 +39,12 @@ public final class OraclePersister extends JdbcPersister {
 			final String username,
 			final String password,
 			final boolean autoCommit) {
-		super("jdbc:oracle:thin:@" + host + ':' + port + ':' + sid,
-				autoCommit,
+		super(new OracleConnectionParameters(host,
+				port,
+				sid,
 				username,
-				password);
+				password,
+				autoCommit));
 	}
 
 	/**
@@ -76,7 +78,7 @@ public final class OraclePersister extends JdbcPersister {
 	 */
 	@Override
 	public String getClientVersion() {
-		return "Oracle " + getDriverVersion() + " (auto-commit: " + this.autoCommit + ")";
+		return "Oracle " + getDriverVersion() + " (auto-commit: " + this.connectionParameters.getAutoCommit() + ")";
 	}
 
 	/**
@@ -118,6 +120,6 @@ public final class OraclePersister extends JdbcPersister {
 	 */
 	@Override
 	public OracleConnectionParameters getConnectionParameters() {
-		return new OracleConnectionParameters();
+		return (OracleConnectionParameters) this.connectionParameters;
 	}
 }

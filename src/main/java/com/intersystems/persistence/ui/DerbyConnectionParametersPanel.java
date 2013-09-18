@@ -22,7 +22,7 @@ import com.intersystems.persistence.DerbyPersister;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class DerbyConnectionParametersPanel extends ConnectionParametersPanel<DerbyPersister> {
+public final class DerbyConnectionParametersPanel extends JdbcConnectionParametersPanel<DerbyPersister> {
 	private static final long serialVersionUID = -5202714019412398701L;
 
 	/**
@@ -31,8 +31,9 @@ public final class DerbyConnectionParametersPanel extends ConnectionParametersPa
 	public DerbyConnectionParametersPanel(final DerbyConnectionParameters connectionParameters) {
 		super(connectionParameters);
 
-		final GridBagLayout gridBagLayout = new GridBagLayout();
-		this.setLayout(gridBagLayout);
+		this.removeAll();
+
+		this.setLayout(new GridBagLayout());
 
 		final JLabel lblDatabaseName = new JLabel("Database Name:");
 		final GridBagConstraints gbc_lblDatabaseName = new GridBagConstraints();
@@ -42,8 +43,9 @@ public final class DerbyConnectionParametersPanel extends ConnectionParametersPa
 		this.add(lblDatabaseName, gbc_lblDatabaseName);
 
 		final JTextField txtDatabaseName = new JTextField();
-		lblDatabaseName.setLabelFor(txtDatabaseName);
 		txtDatabaseName.setText(connectionParameters.getDatabaseName());
+		txtDatabaseName.setEditable(false);
+		lblDatabaseName.setLabelFor(txtDatabaseName);
 		final GridBagConstraints gbc_txtDatabaseName = new GridBagConstraints();
 		gbc_txtDatabaseName.weightx = 1.0;
 		gbc_txtDatabaseName.insets = new Insets(5, 0, 5, 5);
@@ -55,6 +57,7 @@ public final class DerbyConnectionParametersPanel extends ConnectionParametersPa
 
 		final JCheckBox chckbxAutocommit = new JCheckBox("Auto-Commit");
 		chckbxAutocommit.setSelected(connectionParameters.getAutoCommit());
+		chckbxAutocommit.setEnabled(false);
 		final GridBagConstraints gbc_chckbxAutocommit = new GridBagConstraints();
 		gbc_chckbxAutocommit.anchor = WEST;
 		gbc_chckbxAutocommit.weightx = 1.0;

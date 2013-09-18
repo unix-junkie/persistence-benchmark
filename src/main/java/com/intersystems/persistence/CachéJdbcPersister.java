@@ -26,10 +26,12 @@ public final class Cach\u00e9JdbcPersister extends JdbcPersister {
 			final String username,
 			final String password,
 			final boolean autoCommit) {
-		super("jdbc:Cache://" + host + ":" + port + "/" + namespace,
-				autoCommit,
+		super(new Cach\u00e9JdbcConnectionParameters(host,
+				port,
+				namespace,
 				username,
-				password);
+				password,
+				autoCommit));
 	}
 
 	/**
@@ -37,7 +39,7 @@ public final class Cach\u00e9JdbcPersister extends JdbcPersister {
 	 */
 	@Override
 	public String getClientVersion() {
-		return "InterSystems Cach\u00e9 " + VersionInfo.getClientVersion() + " (auto-commit: " + this.autoCommit + ")";
+		return "InterSystems Cach\u00e9 " + VersionInfo.getClientVersion() + " (auto-commit: " + this.connectionParameters.getAutoCommit() + ")";
 	}
 
 	/**
@@ -61,6 +63,6 @@ public final class Cach\u00e9JdbcPersister extends JdbcPersister {
 	 */
 	@Override
 	public Cach\u00e9JdbcConnectionParameters getConnectionParameters() {
-		return new Cach\u00e9JdbcConnectionParameters();
+		return (Cach\u00e9JdbcConnectionParameters) this.connectionParameters;
 	}
 }

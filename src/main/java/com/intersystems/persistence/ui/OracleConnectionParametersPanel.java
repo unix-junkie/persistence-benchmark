@@ -4,6 +4,7 @@
 package com.intersystems.persistence.ui;
 
 import java.awt.Component;
+import java.awt.GridBagLayout;
 
 import com.intersystems.persistence.OracleConnectionParameters;
 import com.intersystems.persistence.OraclePersister;
@@ -11,7 +12,7 @@ import com.intersystems.persistence.OraclePersister;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class OracleConnectionParametersPanel extends ConnectionParametersPanel<OraclePersister> {
+public final class OracleConnectionParametersPanel extends JdbcConnectionParametersPanel<OraclePersister> {
 	private static final long serialVersionUID = -2207277781099705804L;
 
 	/**
@@ -19,7 +20,10 @@ public final class OracleConnectionParametersPanel extends ConnectionParametersP
 	 */
 	public OracleConnectionParametersPanel(final OracleConnectionParameters connectionParameters) {
 		super(connectionParameters);
-		// @todo Auto-generated constructor stub
+
+		this.removeAll();
+
+		this.setLayout(new GridBagLayout());
 	}
 
 	/**

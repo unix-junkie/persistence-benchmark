@@ -15,14 +15,12 @@ import org.apache.derby.jdbc.EmbeddedDriver;
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
 public final class DerbyPersister extends JdbcPersister {
-	private static final String DBNAME = "XEP";
-
-	private final DerbyConnectionParameters connectionParameters = new DerbyConnectionParameters();
-
-	public DerbyPersister(final boolean autoCommit) {
-		super("jdbc:derby:" + DBNAME + ";create=true", autoCommit);
-		this.connectionParameters.setDatabaseName(DBNAME);
-		this.connectionParameters.setAutoCommit(autoCommit);
+	/**
+	 * @param databaseName
+	 * @param autoCommit
+	 */
+	public DerbyPersister(final String databaseName, final boolean autoCommit) {
+		super(new DerbyConnectionParameters(databaseName, autoCommit));
 	}
 
 	/**
@@ -31,7 +29,7 @@ public final class DerbyPersister extends JdbcPersister {
 	@Override
 	public String getClientVersion() {
 		final Driver driver = new EmbeddedDriver();
-		return "Apache Derby " + driver.getMajorVersion() + '.' + driver.getMinorVersion() + " (auto-commit: " + this.autoCommit + ")";
+		return "Apache Derby " + driver.getMajorVersion() + '.' + driver.getMinorVersion() + " (auto-commit: " + this.connectionParameters.getAutoCommit() + ")";
 	}
 
 	/**
@@ -42,8 +40,9 @@ public final class DerbyPersister extends JdbcPersister {
 		super.tearDown();
 
 		try {
-			getConnection("jdbc:derby:" + DBNAME + ";shutdown=true");
-			System.out.println("Failed to shut down Derby instance '" + DBNAME + '\'');
+			final String databaseName = this.getConnectionParameters().getDatabaseName();
+			getConnection("jdbc:derby:" + databaseName + ";shutdown=true");
+			System.out.println("Failed to shut down Derby instance '" + databaseName + '\'');
 		} catch (final SQLException sqle) {
 			/*
 			 * Ignore: an exception is always thrown on shutdown.
@@ -72,6 +71,6 @@ public final class DerbyPersister extends JdbcPersister {
 	 */
 	@Override
 	public DerbyConnectionParameters getConnectionParameters() {
-		return this.connectionParameters;
+		return (DerbyConnectionParameters) this.connectionParameters;
 	}
 }

@@ -17,41 +17,17 @@ import java.sql.Timestamp;
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
 public abstract class JdbcPersister extends AbstractPersister {
-	private final String url;
-
-	protected final boolean autoCommit;
-
-	private final String username;
-
-	private final String password;
+	protected final JdbcConnectionParameters<? extends JdbcPersister> connectionParameters;
 
 	private Connection conn;
 
 	private PreparedStatement pstmt;
 
 	/**
-	 * @param url
-	 * @param autoCommit
-	 * @param username
-	 * @param password
+	 * @param connectionParameters
 	 */
-	protected JdbcPersister(final String url,
-			final boolean autoCommit,
-			final String username,
-			final String password) {
-		this.url = url;
-		this.username = username;
-		this.password = password;
-		this.autoCommit = autoCommit;
-	}
-
-	/**
-	 * @param url
-	 * @param autoCommit
-	 */
-	protected JdbcPersister(final String url,
-			final boolean autoCommit) {
-		this(url, autoCommit, null, null);
+	protected JdbcPersister(final JdbcConnectionParameters<? extends JdbcPersister> connectionParameters) {
+		this.connectionParameters = connectionParameters;
 	}
 
 	/**
@@ -177,10 +153,16 @@ public abstract class JdbcPersister extends AbstractPersister {
 	 */
 	private void initConnection() throws ClassNotFoundException, SQLException {
 		Class.forName(this.getDriverClass().getName());
-		this.conn = this.username == null || this.username.length() == 0
-				? DriverManager.getConnection(this.url)
-				: DriverManager.getConnection(this.url, this.username, this.password);
-		this.conn.setAutoCommit(this.autoCommit);
+
+		final String url = this.connectionParameters.getUrl();
+		final String username = this.connectionParameters.getUsername();
+		final String password = this.connectionParameters.getPassword();
+		final boolean autoCommit = this.connectionParameters.getAutoCommit();
+
+		this.conn = username == null || username.length() == 0
+				? DriverManager.getConnection(url)
+				: DriverManager.getConnection(url, username, password);
+		this.conn.setAutoCommit(autoCommit);
 		final DatabaseMetaData metaData = this.conn.getMetaData();
 		this.setServerVersion(metaData.getDatabaseProductName() + ", version " + metaData.getDatabaseProductVersion() + " at " + metaData.getURL());
 		this.setRunning(true);

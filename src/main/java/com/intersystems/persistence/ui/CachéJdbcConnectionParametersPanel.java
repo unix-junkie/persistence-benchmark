@@ -11,7 +11,7 @@ import com.intersystems.persistence.Cach\u00e9JdbcPersister;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class Cach\u00e9JdbcConnectionParametersPanel extends ConnectionParametersPanel<Cach\u00e9JdbcPersister> {
+public final class Cach\u00e9JdbcConnectionParametersPanel extends JdbcConnectionParametersPanel<Cach\u00e9JdbcPersister> {
 	private static final long serialVersionUID = -1733281789467997038L;
 
 	/**
@@ -19,6 +19,9 @@ public final class Cach\u00e9JdbcConnectionParametersPanel extends ConnectionPar
 	 */
 	public Cach\u00e9JdbcConnectionParametersPanel(final Cach\u00e9JdbcConnectionParameters connectionParameters) {
 		super(connectionParameters);
+
+		this.removeAll();
+
 	}
 
 	/**

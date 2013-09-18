@@ -3,12 +3,25 @@
  */
 package com.intersystems.persistence;
 
+import com.intersystems.persistence.ui.ConnectionParametersPanel;
+import com.intersystems.persistence.ui.DerbyConnectionParametersPanel;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
 public final class DerbyConnectionParameters extends JdbcConnectionParameters<DerbyPersister> {
 	private String databaseName;
+
+	private DerbyConnectionParametersPanel view;
+
+	/**
+	 * @param databaseName
+	 * @param autoCommit
+	 */
+	public DerbyConnectionParameters(final String databaseName, final boolean autoCommit) {
+		super("jdbc:derby:" + databaseName + ";create=true", autoCommit);
+		this.databaseName = databaseName;
+	}
 
 	/**
 	 * @param databaseName
@@ -19,5 +32,15 @@ public final class DerbyConnectionParameters extends JdbcConnectionParameters<De
 
 	public String getDatabaseName() {
 		return this.databaseName;
+	}
+
+	/**
+	 * @see ConnectionParameters#getView()
+	 */
+	@Override
+	public ConnectionParametersPanel<DerbyPersister> getView() {
+		return this.view == null
+				? this.view = new DerbyConnectionParametersPanel(this)
+				: this.view;
 	}
 }
