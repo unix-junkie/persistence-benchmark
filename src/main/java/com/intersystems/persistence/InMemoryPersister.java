@@ -33,11 +33,12 @@ public final class InMemoryPersister extends AbstractPersister {
 	 * @see Persister#setUp()
 	 */
 	@Override
-	public void setUp() {
+	public TestResult setUp() {
 		this.events = this.keepEvents
 				? new ArrayList<Event>()
 				: Collections.<Event>emptyList();
 		this.setRunning(true);
+		return TestResult.READY;
 	}
 
 	/**

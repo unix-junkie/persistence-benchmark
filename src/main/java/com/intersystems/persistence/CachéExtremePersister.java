@@ -9,6 +9,7 @@ import com.intersys.globals.GlobalsException;
 import com.intersys.util.VersionInfo;
 import com.intersys.xep.EventPersister;
 import com.intersys.xep.PersisterFactory;
+import com.intersys.xep.XEPException;
 import com.intersys.xep.annotations.Id;
 
 /**
@@ -123,7 +124,7 @@ public final class Cach\u00e9ExtremePersister extends AbstractPersister {
 	 * @see Persister#setUp()
 	 */
 	@Override
-	public void setUp() {
+	public TestResult setUp() {
 		this.persister = PersisterFactory.createPersister();
 
 		if (this.useShm()) {
@@ -133,15 +134,21 @@ public final class Cach\u00e9ExtremePersister extends AbstractPersister {
 				/*
 				 * Most probably, an UnsatisfiedLinkError
 				 */
-				System.out.println(ge.getMessage());
-				return;
+				return new TestResult(ge);
 			}
 		} else {
 			try {
 				this.persister.connect(this.host, this.port, this.namespace, this.user, this.password);
 			} catch (final OutOfMemoryError oome) {
-				System.out.println(oome.getMessage());
-				return;
+				/*
+				 * Java heap size needs to be at least 768m
+				 */
+				return new TestResult(oome);
+			} catch (final XEPException xepe) {
+				/*
+				 * Connection failed.
+				 */
+				return new TestResult(xepe);
 			}
 		}
 		try {
@@ -177,13 +184,10 @@ public final class Cach\u00e9ExtremePersister extends AbstractPersister {
 			}
 
 			this.persisterEvent = this.persister.getEvent(cach\u00e9ClassName);
+
+			return TestResult.READY;
 		} catch (final Exception e) {
-			e.printStackTrace(System.out);
-			final Throwable cause = e.getCause();
-			if (cause != null) {
-				System.out.println("--------------");
-				cause.printStackTrace(System.out);
-			}
+			return new TestResult(e);
 		}
 	}
 

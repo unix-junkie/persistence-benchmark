@@ -34,7 +34,7 @@ public interface Persister {
 	ConnectionParameters<?> getConnectionParameters();
 
 
-	void setUp();
+	TestResult setUp();
 
 	/**
 	 * @param event

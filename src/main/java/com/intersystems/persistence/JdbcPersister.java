@@ -3,6 +3,7 @@
  */
 package com.intersystems.persistence;
 
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
@@ -57,12 +58,19 @@ public abstract class JdbcPersister extends AbstractPersister {
 	 * @see Persister#setUp()
 	 */
 	@Override
-	public final void setUp() {
-		this.initConnection();
-
-		if (this.conn == null) {
+	public final TestResult setUp() {
+		try {
+			this.initConnection();
+		} catch (final ClassNotFoundException cnfe) {
 			this.pstmt = null;
-			return;
+
+			return new TestResult(cnfe);
+		} catch (final SQLException sqle) {
+			this.pstmt = null;
+
+			printExceptionChain(sqle, System.out);
+
+			return new TestResult(sqle);
 		}
 
 		try {
@@ -78,16 +86,40 @@ public abstract class JdbcPersister extends AbstractPersister {
 					stmt.executeUpdate("truncate table events");
 					this.conn.commit();
 				} catch (final SQLException sqle) {
-					System.out.println(sqle.getMessage());
+					printExceptionChain(sqle, System.out);
+
+					return new TestResult(sqle);
 				}
 			} finally {
 				stmt.close();
 			}
 		} catch (final SQLException sqle) {
-			System.out.println(sqle.getMessage());
+			printExceptionChain(sqle, System.out);
+
+			return new TestResult(sqle);
 		}
 
-		this.pstmt = this.getPreparedStatement();
+		try {
+			this.pstmt = this.getPreparedStatement();
+			return TestResult.READY;
+		} catch (final SQLException sqle) {
+			printExceptionChain(sqle, System.out);
+
+			return new TestResult(sqle);
+		}
+	}
+
+	/**
+	 * @param sqle
+	 * @param out
+	 */
+	private static void printExceptionChain(final SQLException sqle, final PrintStream out) {
+		out.println(sqle.getMessage());
+
+		SQLException nextException = sqle;
+		while ((nextException = nextException.getNextException()) != null) {
+			out.println(nextException.getMessage());
+		}
 	}
 
 	/**
@@ -107,7 +139,7 @@ public abstract class JdbcPersister extends AbstractPersister {
 			this.pstmt.setLong(5, event.vol);
 			this.pstmt.executeUpdate();
 		} catch (final SQLException sqle) {
-			System.out.println(sqle.getMessage());
+			printExceptionChain(sqle, System.out);
 		}
 	}
 
@@ -120,12 +152,12 @@ public abstract class JdbcPersister extends AbstractPersister {
 			try {
 				this.conn.commit();
 			} catch (final SQLException sqle) {
-				System.out.println(sqle.getMessage());
+				printExceptionChain(sqle, System.out);
 			}
 			try {
 				this.conn.close();
 			} catch (final SQLException sqle) {
-				System.out.println(sqle.getMessage());
+				printExceptionChain(sqle, System.out);
 			}
 		}
 
@@ -139,25 +171,19 @@ public abstract class JdbcPersister extends AbstractPersister {
 	 */
 	protected abstract String getCreateSql(final DatabaseMetaData metaData);
 
-	private void initConnection() {
-		try {
-			Class.forName(this.getDriverClass().getName());
-			this.conn = this.username == null || this.username.length() == 0
-					? DriverManager.getConnection(this.url)
-					: DriverManager.getConnection(this.url, this.username, this.password);
-			this.conn.setAutoCommit(this.autoCommit);
-			final DatabaseMetaData metaData = this.conn.getMetaData();
-			this.setServerVersion(metaData.getDatabaseProductName() + ", version " + metaData.getDatabaseProductVersion() + " at " + metaData.getURL());
-			this.setRunning(true);
-		} catch (final ClassNotFoundException cnfe) {
-			System.out.println(cnfe.getMessage());
-		} catch (final SQLException sqle) {
-			System.out.println(sqle.getMessage());
-			SQLException nextException = sqle;
-			while ((nextException = nextException.getNextException()) != null) {
-				System.out.println(nextException.getMessage());
-			}
-		}
+	/**
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	private void initConnection() throws ClassNotFoundException, SQLException {
+		Class.forName(this.getDriverClass().getName());
+		this.conn = this.username == null || this.username.length() == 0
+				? DriverManager.getConnection(this.url)
+				: DriverManager.getConnection(this.url, this.username, this.password);
+		this.conn.setAutoCommit(this.autoCommit);
+		final DatabaseMetaData metaData = this.conn.getMetaData();
+		this.setServerVersion(metaData.getDatabaseProductName() + ", version " + metaData.getDatabaseProductVersion() + " at " + metaData.getURL());
+		this.setRunning(true);
 	}
 
 	@SuppressWarnings("static-method")
@@ -165,16 +191,14 @@ public abstract class JdbcPersister extends AbstractPersister {
 		return "insert into events(ticker, per, timestamp, \"LAST\", vol) values (?, ?, ?, ?, ?)";
 	}
 
-	private PreparedStatement getPreparedStatement() {
+	/**
+	 * @throws SQLException
+	 */
+	private PreparedStatement getPreparedStatement() throws SQLException {
 		if (this.conn == null) {
 			throw new IllegalStateException();
 		}
 
-		try {
-			return this.conn.prepareStatement(this.getInsertSql());
-		} catch (final SQLException sqle) {
-			System.out.println(sqle.getMessage());
-			return null;
-		}
+		return this.conn.prepareStatement(this.getInsertSql());
 	}
 }

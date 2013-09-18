@@ -49,6 +49,7 @@ import javax.swing.filechooser.FileFilter;
 
 import com.intersystems.persistence.Persister;
 import com.intersystems.persistence.TestPersistencePerformance;
+import com.intersystems.persistence.TestResult;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
@@ -176,9 +177,13 @@ public final class MainFrame extends JFrame {
 
 							final int cycles = warmUpCycles + 1;
 
-							persister.setUp();
-							for (int k = 0; k < cycles; k++) {
-								TestPersistencePerformance.process(persister, MainFrame.this.selectedFiles);
+							final TestResult testResult = persister.setUp();
+							if (testResult.isSuccessful()) {
+								for (int k = 0; k < cycles; k++) {
+									TestPersistencePerformance.process(persister, MainFrame.this.selectedFiles);
+								}
+							} else {
+								persister.setTestResult(testResult);
 							}
 							persister.tearDown();
 

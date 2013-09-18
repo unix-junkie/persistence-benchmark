@@ -11,10 +11,13 @@ public final class TestResult {
 	 * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
 	 */
 	private static enum TestStatus {
+		@SuppressWarnings("hiding")
 		READY,
 		SUCCESS,
 		FAILURE,
 	}
+
+	public static final TestResult READY = new TestResult();
 
 	private final TestStatus status;
 
@@ -24,9 +27,9 @@ public final class TestResult {
 
 	private final double seconds;
 
-	public TestResult() {
+	private TestResult() {
 		this.status = TestStatus.READY;
-		this.message = this.status.name();
+		this.message = "";
 		this.numEvents = 0;
 		this.seconds = 0;
 	}
