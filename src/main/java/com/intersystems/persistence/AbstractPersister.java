@@ -15,7 +15,7 @@ public abstract class AbstractPersister implements Persister {
 
 	private volatile boolean running;
 
-	private volatile TestResult testResult;
+	private volatile TestResult testResult = TestResult.NO_DATA;
 
 	DefaultListModel listModel;
 
@@ -51,7 +51,7 @@ public abstract class AbstractPersister implements Persister {
 	protected final void setRunning(final boolean running) {
 		this.running = running;
 		if (this.running) {
-			this.testResult = null;
+			this.testResult = TestResult.NO_DATA;
 		}
 		this.fireContentsChanged();
 	}
@@ -66,11 +66,11 @@ public abstract class AbstractPersister implements Persister {
 	}
 
 	/**
-	 * @see Persister#getTestResultMessage()
+	 * @see Persister#getTestResult()
 	 */
 	@Override
-	public String getTestResultMessage() {
-		return this.testResult == null ? "" : this.testResult.getMessage();
+	public TestResult getTestResult() {
+		return this.testResult;
 	}
 
 	/**

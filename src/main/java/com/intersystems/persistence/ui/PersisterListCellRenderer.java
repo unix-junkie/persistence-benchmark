@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
 import com.intersystems.persistence.Persister;
+import com.intersystems.persistence.TestResult;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
@@ -102,10 +103,13 @@ public final class PersisterListCellRenderer extends JPanel implements ListCellR
 	@Override
 	public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean cellHasFocus) {
 		final Persister persister = (Persister) value;
+		final TestResult testResult = persister.getTestResult();
+
 		this.clientVersion.setText(persister.getClientVersion());
 		this.serverVersion.setText(persister.getServerVersion());
 		this.progressBar.setIndeterminate(persister.isRunning());
-		this.progressBar.setString(persister.getTestResultMessage());
+		this.progressBar.setString(testResult.getMessage());
+		this.progressBar.setValue(testResult.isCompleted() ? this.progressBar.getMaximum() : this.progressBar.getMinimum());
 
 		return this;
 	}

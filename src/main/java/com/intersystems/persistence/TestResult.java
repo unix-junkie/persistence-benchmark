@@ -12,12 +12,12 @@ public final class TestResult {
 	 */
 	private static enum TestStatus {
 		@SuppressWarnings("hiding")
-		READY,
+		NO_DATA,
 		SUCCESS,
 		FAILURE,
 	}
 
-	public static final TestResult READY = new TestResult();
+	public static final TestResult NO_DATA = new TestResult();
 
 	private final TestStatus status;
 
@@ -28,7 +28,7 @@ public final class TestResult {
 	private final double seconds;
 
 	private TestResult() {
-		this.status = TestStatus.READY;
+		this.status = TestStatus.NO_DATA;
 		this.message = "";
 		this.numEvents = 0;
 		this.seconds = 0;
@@ -70,11 +70,13 @@ public final class TestResult {
 
 	/**
 	 * Either ready or success.
-	 *
-	 * @return
 	 */
 	public boolean isSuccessful() {
 		return this.status != TestStatus.FAILURE;
+	}
+
+	public boolean isCompleted() {
+		return this.status == TestStatus.SUCCESS;
 	}
 
 	/**

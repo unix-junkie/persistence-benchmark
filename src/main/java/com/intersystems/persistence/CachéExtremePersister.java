@@ -185,7 +185,7 @@ public final class Cach\u00e9ExtremePersister extends AbstractPersister {
 
 			this.persisterEvent = this.persister.getEvent(cach\u00e9ClassName);
 
-			return TestResult.READY;
+			return TestResult.NO_DATA;
 		} catch (final Exception e) {
 			return new TestResult(e);
 		}

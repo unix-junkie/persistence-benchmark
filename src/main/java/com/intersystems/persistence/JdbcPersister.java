@@ -101,7 +101,7 @@ public abstract class JdbcPersister extends AbstractPersister {
 
 		try {
 			this.pstmt = this.getPreparedStatement();
-			return TestResult.READY;
+			return TestResult.NO_DATA;
 		} catch (final SQLException sqle) {
 			printExceptionChain(sqle, System.out);
 

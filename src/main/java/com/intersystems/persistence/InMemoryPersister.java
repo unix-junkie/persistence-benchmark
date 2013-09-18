@@ -38,7 +38,7 @@ public final class InMemoryPersister extends AbstractPersister {
 				? new ArrayList<Event>()
 				: Collections.<Event>emptyList();
 		this.setRunning(true);
-		return TestResult.READY;
+		return TestResult.NO_DATA;
 	}
 
 	/**

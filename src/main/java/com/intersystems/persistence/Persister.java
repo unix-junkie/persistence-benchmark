@@ -20,7 +20,7 @@ public interface Persister {
 	 */
 	void setTestResult(final TestResult testResult);
 
-	String getTestResultMessage();
+	TestResult getTestResult();
 
 	/**
 	 * @param listModel
