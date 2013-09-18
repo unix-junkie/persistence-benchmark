@@ -8,6 +8,8 @@ import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
+import static javax.swing.UIManager.getSystemLookAndFeelClassName;
+import static javax.swing.UIManager.setLookAndFeel;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -116,6 +118,12 @@ public abstract class TestPersistencePerformance {
 			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", true, false),
 			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", true, false, "localhost", 56777),
 		};
+
+		try {
+			setLookAndFeel(getSystemLookAndFeelClassName());
+		} catch (final Exception e) {
+			// ignore
+		}
 
 		final ConnectionParametersPanel<?> connectionProperties[] = {
 			new DerbyConnectionParametersPanel(derbyPersister.getConnectionParameters()),
