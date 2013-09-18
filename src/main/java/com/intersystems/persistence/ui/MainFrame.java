@@ -246,7 +246,7 @@ public final class MainFrame extends JFrame {
 						return f.isDirectory() || f.getName().toLowerCase().endsWith(".csv");
 					}
 				});
-				final int option = fileChooser.showOpenDialog(null);
+				final int option = fileChooser.showOpenDialog(MainFrame.this);
 				if (option != APPROVE_OPTION) {
 					return;
 				}
