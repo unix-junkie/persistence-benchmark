@@ -3,7 +3,7 @@
  */
 package com.intersystems.persistence;
 
-import com.intersystems.persistence.ui.ConnectionParametersPanel;
+import com.intersystems.persistence.ui.Cach\u00e9ExtremeConnectionParametersPanel;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
@@ -13,7 +13,7 @@ public final class Cach\u00e9ExtremeConnectionParameters implements ConnectionPa
 	 * @see ConnectionParameters#getView()
 	 */
 	@Override
-	public ConnectionParametersPanel<Cach\u00e9ExtremePersister> getView() {
+	public Cach\u00e9ExtremeConnectionParametersPanel getView() {
 		throw new UnsupportedOperationException();
 	}
 }
