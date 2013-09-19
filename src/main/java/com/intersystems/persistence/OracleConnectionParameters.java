@@ -9,6 +9,13 @@ import com.intersystems.persistence.ui.OracleConnectionParametersPanel;
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
 public final class OracleConnectionParameters extends JdbcConnectionParameters<OraclePersister> {
+	private final String host;
+
+	private final int port;
+
+	private final String sid;
+
+
 	private OracleConnectionParametersPanel view;
 
 	/**
@@ -29,6 +36,21 @@ public final class OracleConnectionParameters extends JdbcConnectionParameters<O
 				autoCommit,
 				username,
 				password);
+		this.host = host;
+		this.port = port;
+		this.sid = sid;
+	}
+
+	public String getHost() {
+		return this.host;
+	}
+
+	public int getPort() {
+		return this.port;
+	}
+
+	public String getSid() {
+		return this.sid;
 	}
 
 	/**
