@@ -87,6 +87,8 @@ public abstract class TestPersistencePerformance {
 			new Cach\u00e9JdbcPersister("ashcheglov", 56777, "XEP", "_SYSTEM", "SYS", true),
 			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false),
 			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false, "ashcheglov", 56777),
+			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", true, false),
+			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", true, false, "ashcheglov", 56777),
 		};
 
 		try {
