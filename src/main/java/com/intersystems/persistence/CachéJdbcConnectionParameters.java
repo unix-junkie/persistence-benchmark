@@ -9,6 +9,12 @@ import com.intersystems.persistence.ui.Cach\u00e9JdbcConnectionParametersPanel;
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
 public final class Cach\u00e9JdbcConnectionParameters extends JdbcConnectionParameters<Cach\u00e9JdbcPersister> {
+	private String host;
+
+	private int port;
+
+	private String namespace;
+
 	private Cach\u00e9JdbcConnectionParametersPanel view;
 
 	/**
@@ -29,6 +35,21 @@ public final class Cach\u00e9JdbcConnectionParameters extends JdbcConnectionPara
 				autoCommit,
 				username,
 				password);
+		this.host = host;
+		this.port = port;
+		this.namespace = namespace;
+	}
+
+	public String getHost() {
+		return this.host;
+	}
+
+	public int getPort() {
+		return this.port;
+	}
+
+	public String getNamespace() {
+		return this.namespace;
 	}
 
 	/**
