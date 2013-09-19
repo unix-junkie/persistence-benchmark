@@ -163,17 +163,17 @@ public final class Cach\u00e9JdbcConnectionParametersPanel extends JdbcConnectio
 		this.add(panel_2);
 		panel_2.setLayout(new GridBagLayout());
 
-		final JCheckBox chckbxSuspendJournalling = new JCheckBox("Auto-Commit");
-		chckbxSuspendJournalling.setEnabled(false);
-		chckbxSuspendJournalling.setSelected(connectionParameters.getAutoCommit());
-		final GridBagConstraints gbc_chckbxSuspendJournalling = new GridBagConstraints();
-		gbc_chckbxSuspendJournalling.weightx = 1.0;
-		gbc_chckbxSuspendJournalling.anchor = GridBagConstraints.NORTHWEST;
-		gbc_chckbxSuspendJournalling.weighty = 1.0;
-		gbc_chckbxSuspendJournalling.fill = GridBagConstraints.HORIZONTAL;
-		gbc_chckbxSuspendJournalling.gridwidth = REMAINDER;
-		gbc_chckbxSuspendJournalling.gridheight = REMAINDER;
-		panel_2.add(chckbxSuspendJournalling, gbc_chckbxSuspendJournalling);
+		final JCheckBox chckbxAutoCommit = new JCheckBox("Auto-Commit");
+		chckbxAutoCommit.setEnabled(false);
+		chckbxAutoCommit.setSelected(connectionParameters.getAutoCommit());
+		final GridBagConstraints gbc_chckbxAutoCommit = new GridBagConstraints();
+		gbc_chckbxAutoCommit.weightx = 1.0;
+		gbc_chckbxAutoCommit.anchor = GridBagConstraints.NORTHWEST;
+		gbc_chckbxAutoCommit.weighty = 1.0;
+		gbc_chckbxAutoCommit.fill = GridBagConstraints.HORIZONTAL;
+		gbc_chckbxAutoCommit.gridwidth = REMAINDER;
+		gbc_chckbxAutoCommit.gridheight = REMAINDER;
+		panel_2.add(chckbxAutoCommit, gbc_chckbxAutoCommit);
 	}
 
 	/**
