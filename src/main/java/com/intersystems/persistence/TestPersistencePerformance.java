@@ -17,7 +17,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 
-import com.intersystems.persistence.ui.ConnectionParametersPanel;
 import com.intersystems.persistence.ui.MainFrame;
 
 /**
@@ -82,17 +81,10 @@ public abstract class TestPersistencePerformance {
 	 * @throws IOException
 	 */
 	public static void main(final String args[]) {
-		final DerbyPersister derbyPersister = new DerbyPersister("XEP", true);
-
-		final OraclePersister oraclePersister = new OraclePersister("hatsya", 1521, "XE", "XEP", "XEP", true);
-
-		final Cach\u00e9JdbcPersister cach\u00e9JdbcPersister = new Cach\u00e9JdbcPersister("ashcheglov", 56777, "XEP", "_SYSTEM", "SYS", true);
-
 		final Persister persisters[] = {
-			derbyPersister,
-			oraclePersister,
-			cach\u00e9JdbcPersister,
-
+			new DerbyPersister("XEP", true),
+			new OraclePersister("hatsya", 1521, "XE", "XEP", "XEP", true),
+			new Cach\u00e9JdbcPersister("ashcheglov", 56777, "XEP", "_SYSTEM", "SYS", true),
 			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false),
 			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false, "ashcheglov", 56777),
 		};
@@ -103,14 +95,7 @@ public abstract class TestPersistencePerformance {
 			// ignore
 		}
 
-		final ConnectionParametersPanel<?> connectionProperties[] = {
-			derbyPersister.getConnectionParameters().getView(),
-			oraclePersister.getConnectionParameters().getView(),
-			cach\u00e9JdbcPersister.getConnectionParameters().getView(),
-		};
-
-		final MainFrame frame = new MainFrame(asList(persisters),
-				asList(connectionProperties));
+		final MainFrame frame = new MainFrame(asList(persisters));
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		frame.setBounds(getLocalGraphicsEnvironment().getMaximumWindowBounds());
 		frame.validate();

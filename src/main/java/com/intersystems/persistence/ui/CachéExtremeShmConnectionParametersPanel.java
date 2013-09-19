@@ -5,8 +5,8 @@ package com.intersystems.persistence.ui;
 
 import java.awt.Component;
 
-import com.intersystems.persistence.Cach\u00e9ExtremePersister;
-import com.intersystems.persistence.ConnectionParameters;
+import com.intersystems.persistence.Cach\u00e9ExtremeConnectionParameters;
+import java.awt.GridBagLayout;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
@@ -17,8 +17,10 @@ public final class Cach\u00e9ExtremeShmConnectionParametersPanel extends Cach\u0
 	/**
 	 * @param connectionParameters
 	 */
-	protected Cach\u00e9ExtremeShmConnectionParametersPanel(final ConnectionParameters<Cach\u00e9ExtremePersister> connectionParameters) {
+	public Cach\u00e9ExtremeShmConnectionParametersPanel(final Cach\u00e9ExtremeConnectionParameters connectionParameters) {
 		super(connectionParameters);
+
+		this.setLayout(new GridBagLayout());
 	}
 
 	/**
@@ -26,6 +28,6 @@ public final class Cach\u00e9ExtremeShmConnectionParametersPanel extends Cach\u0
 	 */
 	@Override
 	public String getName() {
-		return "Cach\u00e9 Extreme (SHM)";
+		return "Cach\u00e9 eXtreme (SHM)";
 	}
 }

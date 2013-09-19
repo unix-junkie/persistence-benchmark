@@ -68,10 +68,8 @@ public final class MainFrame extends JFrame {
 
 	/**
 	 * @param persisters
-	 * @param connectionParameters
 	 */
-	public MainFrame(final List<Persister> persisters,
-			final List<ConnectionParametersPanel<?>> connectionParameters) {
+	public MainFrame(final List<Persister> persisters) {
 		this.setTitle("Persistence Performance");
 		final GridBagLayout gridBagLayout = new GridBagLayout();
 		this.getContentPane().setLayout(gridBagLayout);
@@ -91,8 +89,9 @@ public final class MainFrame extends JFrame {
 		generalSettings.setLayout(gbl_generalSettings);
 
 		tabbedPane.addTab("General", generalSettings);
-		for (final ConnectionParametersPanel<?> connectionParameter : connectionParameters) {
-			tabbedPane.addTab(connectionParameter.getName(), connectionParameter);
+		for (final Persister persister : persisters) {
+			final ConnectionParametersPanel<?> connectionParameters = persister.getConnectionParameters().getView();
+			tabbedPane.addTab(connectionParameters.getName(), connectionParameters);
 		}
 
 		final JLabel lblNewLabel = new JLabel("Dry-run cycles:");
