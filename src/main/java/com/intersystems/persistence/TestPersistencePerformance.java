@@ -81,14 +81,20 @@ public abstract class TestPersistencePerformance {
 	 * @throws IOException
 	 */
 	public static void main(final String args[]) {
+		final String host = "localhost";
+		final int cachePort = 1972;
+		final String cacheNamespace = "USER";
+		final String cacheUsername = "_SYSTEM";
+		final String cachePassword = "SYS";
+
 		final Persister persisters[] = {
 			new DerbyPersister("XEP", true),
-			new OraclePersister("hatsya", 1521, "XE", "XEP", "XEP", true),
-			new Cach\u00e9JdbcPersister("ashcheglov", 56777, "XEP", "_SYSTEM", "SYS", true),
-			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false),
-			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", false, false, "ashcheglov", 56777),
-			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", true, false),
-			new Cach\u00e9ExtremePersister("XEP", "_SYSTEM", "SYS", true, false, "ashcheglov", 56777),
+			new OraclePersister(host, 1521, "XE", "SYSTEM", "SYSTEM", true),
+			new Cach\u00e9JdbcPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
+			new Cach\u00e9ExtremePersister(cacheNamespace, cacheUsername, cachePassword, false, false),
+			new Cach\u00e9ExtremePersister(cacheNamespace, cacheUsername, cachePassword, false, false, host, cachePort),
+			new Cach\u00e9ExtremePersister(cacheNamespace, cacheUsername, cachePassword, true, false),
+			new Cach\u00e9ExtremePersister(cacheNamespace, cacheUsername, cachePassword, true, false, host, cachePort),
 		};
 
 		try {
