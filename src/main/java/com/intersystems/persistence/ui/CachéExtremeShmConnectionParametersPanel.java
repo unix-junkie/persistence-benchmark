@@ -1,5 +1,5 @@
 /*-
- * $Id$
+ * $Id: 6956b58bdada4b8dc0cc4a040662ad776e86caf1 $
  */
 package com.intersystems.persistence.ui;
 
@@ -39,7 +39,7 @@ public final class Cach\u00e9ExtremeShmConnectionParametersPanel extends Cach\u0
 		this.add(panel);
 		panel.setLayout(new GridBagLayout());
 
-		final JLabel lblNewLabel = new JLabel("Namespace");
+		final JLabel lblNewLabel = new JLabel("Namespace:");
 		final GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
