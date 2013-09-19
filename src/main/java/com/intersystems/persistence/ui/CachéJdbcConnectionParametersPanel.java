@@ -1,5 +1,5 @@
 /*-
- * $Id: 398094e3fa0ea260eb968fdd8f4f82216d6b0bf5 $
+ * $Id$
  */
 package com.intersystems.persistence.ui;
 
