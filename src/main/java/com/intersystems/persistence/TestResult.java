@@ -35,13 +35,24 @@ public final class TestResult {
 	}
 
 	/**
+	 * Constructs a test failure with a custom message.
+	 *
+	 * @param message
+	 */
+	public TestResult(final String message) {
+		this.status = TestStatus.FAILURE;
+		this.message = message;
+		this.numEvents = 0;
+		this.seconds = 0;
+	}
+
+	/**
+	 * Constructs a test failure from an exception.
+	 *
 	 * @param t
 	 */
 	public TestResult(final Throwable t) {
-		this.status = TestStatus.FAILURE;
-		this.message = t.getMessage();
-		this.numEvents = 0;
-		this.seconds = 0;
+		this(t.getMessage());
 	}
 
 	/**
