@@ -17,18 +17,18 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import com.intersystems.persistence.Cach\u00e9ExtremeConnectionParameters;
+import com.intersystems.persistence.CacheExtremeConnectionParameters;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class Cach\u00e9ExtremeShmConnectionParametersPanel extends Cach\u00e9ExtremeConnectionParametersPanel {
+public final class CacheExtremeShmConnectionParametersPanel extends CacheExtremeConnectionParametersPanel {
 	private static final long serialVersionUID = 2173001890984252740L;
 
 	/**
 	 * @param connectionParameters
 	 */
-	public Cach\u00e9ExtremeShmConnectionParametersPanel(final Cach\u00e9ExtremeConnectionParameters connectionParameters) {
+	public CacheExtremeShmConnectionParametersPanel(final CacheExtremeConnectionParameters connectionParameters) {
 		super(connectionParameters);
 
 

@@ -4,14 +4,14 @@
 package com.intersystems.persistence;
 
 import com.intersys.xep.annotations.Id;
-import com.intersystems.persistence.ui.Cach\u00e9ExtremeConnectionParametersPanel;
-import com.intersystems.persistence.ui.Cach\u00e9ExtremeShmConnectionParametersPanel;
-import com.intersystems.persistence.ui.Cach\u00e9ExtremeTcpConnectionParametersPanel;
+import com.intersystems.persistence.ui.CacheExtremeConnectionParametersPanel;
+import com.intersystems.persistence.ui.CacheExtremeShmConnectionParametersPanel;
+import com.intersystems.persistence.ui.CacheExtremeTcpConnectionParametersPanel;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class Cach\u00e9ExtremeConnectionParameters implements ConnectionParameters<Cach\u00e9ExtremePersister> {
+public final class CacheExtremeConnectionParameters implements ConnectionParameters<CacheExtremePersister> {
 	private final String namespace;
 
 	private final String user;
@@ -32,7 +32,7 @@ public final class Cach\u00e9ExtremeConnectionParameters implements ConnectionPa
 	private final int port;
 
 
-	private Cach\u00e9ExtremeConnectionParametersPanel view;
+	private CacheExtremeConnectionParametersPanel view;
 
 	/**
 	 * @param namespace
@@ -70,7 +70,7 @@ public final class Cach\u00e9ExtremeConnectionParameters implements ConnectionPa
 	 * @param host
 	 * @param port
 	 */
-	public Cach\u00e9ExtremeConnectionParameters(final String namespace,
+	public CacheExtremeConnectionParameters(final String namespace,
 			final String user,
 			final String password,
 			final boolean suspendJournalling,
@@ -124,11 +124,11 @@ public final class Cach\u00e9ExtremeConnectionParameters implements ConnectionPa
 	 * @see ConnectionParameters#getView()
 	 */
 	@Override
-	public Cach\u00e9ExtremeConnectionParametersPanel getView() {
+	public CacheExtremeConnectionParametersPanel getView() {
 		return this.view == null
 				? this.view = this.useShm()
-						? new Cach\u00e9ExtremeShmConnectionParametersPanel(this)
-						: new Cach\u00e9ExtremeTcpConnectionParametersPanel(this)
+						? new CacheExtremeShmConnectionParametersPanel(this)
+						: new CacheExtremeTcpConnectionParametersPanel(this)
 				: this.view;
 	}
 }

@@ -11,7 +11,7 @@ import com.intersys.util.VersionInfo;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class Cach\u00e9JdbcPersister extends JdbcPersister {
+public final class CacheJdbcPersister extends JdbcPersister {
 	/**
 	 * @param host
 	 * @param port
@@ -20,13 +20,13 @@ public final class Cach\u00e9JdbcPersister extends JdbcPersister {
 	 * @param password
 	 * @param autoCommit
 	 */
-	public Cach\u00e9JdbcPersister(final String host,
+	public CacheJdbcPersister(final String host,
 			final int port,
 			final String namespace,
 			final String username,
 			final String password,
 			final boolean autoCommit) {
-		super(new Cach\u00e9JdbcConnectionParameters(host,
+		super(new CacheJdbcConnectionParameters(host,
 				port,
 				namespace,
 				username,
@@ -62,7 +62,7 @@ public final class Cach\u00e9JdbcPersister extends JdbcPersister {
 	 * @see Persister#getConnectionParameters()
 	 */
 	@Override
-	public Cach\u00e9JdbcConnectionParameters getConnectionParameters() {
-		return (Cach\u00e9JdbcConnectionParameters) this.connectionParameters;
+	public CacheJdbcConnectionParameters getConnectionParameters() {
+		return (CacheJdbcConnectionParameters) this.connectionParameters;
 	}
 }

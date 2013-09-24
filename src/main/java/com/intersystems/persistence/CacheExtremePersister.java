@@ -14,8 +14,8 @@ import com.intersys.xep.XEPException;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class Cach\u00e9ExtremePersister extends AbstractPersister {
-	private final Cach\u00e9ExtremeConnectionParameters connectionParameters;
+public final class CacheExtremePersister extends AbstractPersister {
+	private final CacheExtremeConnectionParameters connectionParameters;
 
 	private EventPersister persister;
 
@@ -30,14 +30,14 @@ public final class Cach\u00e9ExtremePersister extends AbstractPersister {
 	 * @param host
 	 * @param port
 	 */
-	public Cach\u00e9ExtremePersister(final String namespace,
+	public CacheExtremePersister(final String namespace,
 			final String user,
 			final String password,
 			final boolean suspendJournalling,
 			final boolean flatSchema,
 			final String host,
 			final int port) {
-		this.connectionParameters = new Cach\u00e9ExtremeConnectionParameters(namespace,
+		this.connectionParameters = new CacheExtremeConnectionParameters(namespace,
 				user,
 				password,
 				suspendJournalling,
@@ -53,7 +53,7 @@ public final class Cach\u00e9ExtremePersister extends AbstractPersister {
 	 * @param suspendJournalling
 	 * @param flatSchema
 	 */
-	public Cach\u00e9ExtremePersister(final String namespace,
+	public CacheExtremePersister(final String namespace,
 			final String user,
 			final String password,
 			final boolean suspendJournalling,
@@ -208,7 +208,7 @@ public final class Cach\u00e9ExtremePersister extends AbstractPersister {
 	 * @see Persister#getConnectionParameters()
 	 */
 	@Override
-	public Cach\u00e9ExtremeConnectionParameters getConnectionParameters() {
+	public CacheExtremeConnectionParameters getConnectionParameters() {
 		return this.connectionParameters;
 	}
 }

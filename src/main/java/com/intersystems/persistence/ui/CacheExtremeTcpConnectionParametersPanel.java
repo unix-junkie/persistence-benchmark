@@ -3,8 +3,6 @@
  */
 package com.intersystems.persistence.ui;
 
-import static java.awt.GridBagConstraints.REMAINDER;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -21,22 +19,19 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 
-import com.intersystems.persistence.Cach\u00e9JdbcConnectionParameters;
-import com.intersystems.persistence.Cach\u00e9JdbcPersister;
+import com.intersystems.persistence.CacheExtremeConnectionParameters;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class Cach\u00e9JdbcConnectionParametersPanel extends JdbcConnectionParametersPanel<Cach\u00e9JdbcPersister> {
-	private static final long serialVersionUID = -1733281789467997038L;
+public final class CacheExtremeTcpConnectionParametersPanel extends CacheExtremeConnectionParametersPanel {
+	private static final long serialVersionUID = -5382938842192808463L;
 
 	/**
 	 * @param connectionParameters
 	 */
-	public Cach\u00e9JdbcConnectionParametersPanel(final Cach\u00e9JdbcConnectionParameters connectionParameters) {
+	public CacheExtremeTcpConnectionParametersPanel(final CacheExtremeConnectionParameters connectionParameters) {
 		super(connectionParameters);
-
-		this.removeAll();
 
 		this.setLayout(new GridLayout());
 
@@ -77,7 +72,7 @@ public final class Cach\u00e9JdbcConnectionParametersPanel extends JdbcConnectio
 		final JTextField textFieldUsername = new JTextField();
 		lblUsername.setLabelFor(textFieldUsername);
 		textFieldUsername.setEditable(false);
-		textFieldUsername.setText(connectionParameters.getUsername());
+		textFieldUsername.setText(connectionParameters.getUser());
 		final GridBagConstraints gbc_textFieldUsername = new GridBagConstraints();
 		gbc_textFieldUsername.weightx = 1.0;
 		gbc_textFieldUsername.insets = new Insets(0, 0, 5, 0);
@@ -163,17 +158,29 @@ public final class Cach\u00e9JdbcConnectionParametersPanel extends JdbcConnectio
 		this.add(panel_2);
 		panel_2.setLayout(new GridBagLayout());
 
-		final JCheckBox chckbxAutoCommit = new JCheckBox("Auto-Commit");
-		chckbxAutoCommit.setEnabled(false);
-		chckbxAutoCommit.setSelected(connectionParameters.getAutoCommit());
-		final GridBagConstraints gbc_chckbxAutoCommit = new GridBagConstraints();
-		gbc_chckbxAutoCommit.weightx = 1.0;
-		gbc_chckbxAutoCommit.anchor = GridBagConstraints.NORTHWEST;
-		gbc_chckbxAutoCommit.weighty = 1.0;
-		gbc_chckbxAutoCommit.fill = GridBagConstraints.HORIZONTAL;
-		gbc_chckbxAutoCommit.gridwidth = REMAINDER;
-		gbc_chckbxAutoCommit.gridheight = REMAINDER;
-		panel_2.add(chckbxAutoCommit, gbc_chckbxAutoCommit);
+		final JCheckBox chckbxUseFlatSchema = new JCheckBox("Use Flat Schema");
+		chckbxUseFlatSchema.setEnabled(false);
+		chckbxUseFlatSchema.setSelected(connectionParameters.isFlatSchema());
+		final GridBagConstraints gbc_chckbxUseFlatSchema = new GridBagConstraints();
+		gbc_chckbxUseFlatSchema.weightx = 1.0;
+		gbc_chckbxUseFlatSchema.anchor = GridBagConstraints.WEST;
+		gbc_chckbxUseFlatSchema.fill = GridBagConstraints.HORIZONTAL;
+		gbc_chckbxUseFlatSchema.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxUseFlatSchema.gridx = 0;
+		gbc_chckbxUseFlatSchema.gridy = 0;
+		panel_2.add(chckbxUseFlatSchema, gbc_chckbxUseFlatSchema);
+
+		final JCheckBox chckbxSuspendJournalling = new JCheckBox("Suspend Journalling (2013.2+)");
+		chckbxSuspendJournalling.setEnabled(false);
+		chckbxSuspendJournalling.setSelected(connectionParameters.getSuspendJournalling());
+		final GridBagConstraints gbc_chckbxSuspendJournalling = new GridBagConstraints();
+		gbc_chckbxSuspendJournalling.weightx = 1.0;
+		gbc_chckbxSuspendJournalling.anchor = GridBagConstraints.NORTHWEST;
+		gbc_chckbxSuspendJournalling.weighty = 1.0;
+		gbc_chckbxSuspendJournalling.fill = GridBagConstraints.HORIZONTAL;
+		gbc_chckbxSuspendJournalling.gridx = 0;
+		gbc_chckbxSuspendJournalling.gridy = 1;
+		panel_2.add(chckbxSuspendJournalling, gbc_chckbxSuspendJournalling);
 	}
 
 	/**
@@ -181,6 +188,6 @@ public final class Cach\u00e9JdbcConnectionParametersPanel extends JdbcConnectio
 	 */
 	@Override
 	public String getName() {
-		return "Cach\u00e9 JDBC";
+		return "Cach\u00e9 eXtreme (TCP)";
 	}
 }

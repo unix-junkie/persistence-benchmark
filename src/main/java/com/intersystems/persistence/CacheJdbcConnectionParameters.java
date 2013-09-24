@@ -3,19 +3,19 @@
  */
 package com.intersystems.persistence;
 
-import com.intersystems.persistence.ui.Cach\u00e9JdbcConnectionParametersPanel;
+import com.intersystems.persistence.ui.CacheJdbcConnectionParametersPanel;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class Cach\u00e9JdbcConnectionParameters extends JdbcConnectionParameters<Cach\u00e9JdbcPersister> {
-	private String host;
+public final class CacheJdbcConnectionParameters extends JdbcConnectionParameters<CacheJdbcPersister> {
+	private final String host;
 
-	private int port;
+	private final int port;
 
-	private String namespace;
+	private final String namespace;
 
-	private Cach\u00e9JdbcConnectionParametersPanel view;
+	private CacheJdbcConnectionParametersPanel view;
 
 	/**
 	 * @param host
@@ -25,7 +25,7 @@ public final class Cach\u00e9JdbcConnectionParameters extends JdbcConnectionPara
 	 * @param password
 	 * @param autoCommit
 	 */
-	public Cach\u00e9JdbcConnectionParameters(final String host,
+	public CacheJdbcConnectionParameters(final String host,
 			final int port,
 			final String namespace,
 			final String username,
@@ -56,9 +56,9 @@ public final class Cach\u00e9JdbcConnectionParameters extends JdbcConnectionPara
 	 * @see ConnectionParameters#getView()
 	 */
 	@Override
-	public Cach\u00e9JdbcConnectionParametersPanel getView() {
+	public CacheJdbcConnectionParametersPanel getView() {
 		return this.view == null
-				? this.view = new Cach\u00e9JdbcConnectionParametersPanel(this)
+				? this.view = new CacheJdbcConnectionParametersPanel(this)
 				: this.view;
 	}
 }
