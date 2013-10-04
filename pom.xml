@@ -9,7 +9,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>US-ASCII</project.build.sourceEncoding>
-		<intersystems.cache.version>2013.2.0.449.0</intersystems.cache.version>
+		<intersystems.cache.version>2013.2.0.461.0</intersystems.cache.version>
 	</properties>
 
 	<build>
