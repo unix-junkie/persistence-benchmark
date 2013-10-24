@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# $Id$
+#
+
+CLASSPATH="\
+`dirname $0`/../share/java/${project.artifactId}-${project.version}.jar:\
+`dirname $0`/../share/${project.artifactId}/cacheextreme-${intersystems.cache.version}.jar:\
+`dirname $0`/../share/${project.artifactId}/cachejdbc-${intersystems.cache.version}.jar:\
+`dirname $0`/../share/${project.artifactId}/derby-${derby.version}.jar:\
+`dirname $0`/../share/${project.artifactId}/ojdbc6-${oracle.version}.jar:\
+"
+export CLASSPATH
+
+if [ -z "${GLOBALS_HOME}" ]
+then
+	export GLOBALS_HOME='/opt/intersystems/cache/2013.2.0'
+fi
+
+if [ ! -d "${GLOBALS_HOME}" ]
+then
+	echo "${GLOBALS_HOME}: directory doesn't exist"
+	exit 1
+fi
+
+case `uname -s` in
+	Darwin)
+		export DYLD_LIBRARY_PATH="${GLOBALS_HOME}/bin:${DYLD_LIBRARY_PATH}"
+		;;
+	*)
+		export LD_LIBRARY_PATH="${GLOBALS_HOME}/bin:${LD_LIBRARY_PATH}"
+		;;
+esac
+
+java -server -Xmx768m -Xss2m -Dsun.jnu.encoding=UTF-8 com.intersystems.persistence.TestPersistencePerformance "$@"
+returnCode=$?
+exit ${returnCode}
