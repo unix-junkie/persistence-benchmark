@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 14:15:22">
+<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 16:23:24">
 <Class name="com.intersystems.persistence.objbinding.PersistenceManager">
 <Final>1</Final>
 <Abstract>1</Abstract>
 <Import>%Exception</Import>
-<TimeChanged>63113,70620.657214</TimeChanged>
+<TimeChanged>63133,58958.221849</TimeChanged>
 <TimeCreated>63105,63347.210154</TimeCreated>
 
 <Method name="Compress">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>data:%String,keepTempFiles:%Boolean=0</FormalSpec>
+<FormalSpec>data:%String</FormalSpec>
 <ReturnType>%String</ReturnType>
 <Implementation><![CDATA[
 	if (data = "") {
@@ -26,7 +26,7 @@
 	close filename
 
 	#dim bytesWritten as %Integer = ##class(%File).GetFileSize(filename)
-	open filename:($select(keepTempFiles: "RLU", 1: "RLUD"):/IOTABLE="RAW")
+	open filename:("RLUD":/IOTABLE="RAW")
 	use filename
 	try {
 		#dim compressedData as %String
@@ -51,11 +51,11 @@
 
 <Method name="Decompress">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>data:%String,keepTempFiles:%Boolean=0</FormalSpec>
+<FormalSpec>data:%String</FormalSpec>
 <ReturnType>%String</ReturnType>
 <Implementation><![CDATA[
-	#dim binary as %String = ..DecompressImpl(data, "RAW", keepTempFiles)
-	#dim unicode as %String = ..DecompressImpl(data, "UTF8", keepTempFiles)
+	#dim binary as %String = ..DecompressImpl(data, "RAW")
+	#dim unicode as %String = ..DecompressImpl(data, "UTF8")
 	/*
 	 * If both decompression results are the same, no further compression is necessary.
 	 */
@@ -76,15 +76,15 @@ An internal method for testing <a href = "http://turbo.iscinternal.com/prodlog/i
 <Internal>1</Internal>
 <ClassMethod>1</ClassMethod>
 <CodeMode>expression</CodeMode>
-<FormalSpec>data:%String,keepTempFiles:%Boolean=0</FormalSpec>
+<FormalSpec>data:%String</FormalSpec>
 <ReturnType>%String</ReturnType>
-<Implementation><![CDATA[..DecompressImpl(data, "UTF8", keepTempFiles)
+<Implementation><![CDATA[..DecompressImpl(data, "UTF8")
 ]]></Implementation>
 </Method>
 
 <Method name="DecompressImpl">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>data:%String,iotable:%String,keepTempFiles:%Boolean</FormalSpec>
+<FormalSpec>data:%String,iotable:%String</FormalSpec>
 <Private>1</Private>
 <ReturnType>%String</ReturnType>
 <Implementation><![CDATA[
@@ -106,7 +106,7 @@ An internal method for testing <a href = "http://turbo.iscinternal.com/prodlog/i
 		throw ##class(SystemException).%New(, , , "Decompress(): " _ bytesWritten _ " byte(s) written; expected: " _ $length(data))
 	}
 
-	open filename:($select(keepTempFiles: "RLU", 1: "RLUD"):/IOTABLE=iotable:/GZIP=9)
+	open filename:("RLUD":/IOTABLE=iotable:/GZIP=9)
 	use filename
 	#dim e as SystemException
 	try {

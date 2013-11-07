@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 15:44:47">
+<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 16:23:31">
 <Class name="com.intersystems.persistence.objbinding.PersistenceManagerTest">
 <Final>1</Final>
 <Abstract>1</Abstract>
 <Hidden>1</Hidden>
-<TimeChanged>63133,56578.660678</TimeChanged>
+<TimeChanged>63133,58305.674362</TimeChanged>
 <TimeCreated>63105,63347.210154</TimeCreated>
 
 <Method name="Main">
@@ -60,7 +60,7 @@ Entry point for tests run from Cache'</Description>
 	for i = 1:1:249 {
 		set data = data _ alphabet
 	}
-	do ..TestCompression(data, 1, 1)
+	do ..TestCompression(data, 1)
 	
 	; <SYSTEM> 10 zDecompress+18^com.intersystems.persistence.objbinding.PersistenceManager.2
 	write "---- Compressing a string which is 147180 chars long (<SYSTEM>)", !
@@ -68,13 +68,13 @@ Entry point for tests run from Cache'</Description>
 	for i = 1:1:2230 {
 		set data = data _ alphabet
 	}
-	do ..TestCompression(data, 1, 1)
+	do ..TestCompression(data, 1)
 ]]></Implementation>
 </Method>
 
 <Method name="TestCompression">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>s:%String,keepTempFiles:%Boolean=0,forceUnicode:%Boolean=0</FormalSpec>
+<FormalSpec>s:%String,forceUnicode:%Boolean=0</FormalSpec>
 <Private>1</Private>
 <Implementation><![CDATA[
 	#dim e as %Exception.SystemException
@@ -91,11 +91,11 @@ Entry point for tests run from Cache'</Description>
 #endif // 0
 
 	try {
-		set compressedData = ##class(PersistenceManager).Compress(s, keepTempFiles)
+		set compressedData = ##class(PersistenceManager).Compress(s)
 		write l, " compressed to ", $length(compressedData), !
 		#dim decompressedData as %String = $select(
-			forceUnicode: ##class(PersistenceManager).DecompressUnicode(compressedData, keepTempFiles),
-			1: ##class(PersistenceManager).Decompress(compressedData, keepTempFiles))
+			forceUnicode: ##class(PersistenceManager).DecompressUnicode(compressedData),
+			1: ##class(PersistenceManager).Decompress(compressedData))
 		write "... decompressed to ", $length(decompressedData), !
 		write "Decompression ", $select(decompressedData = s : "succeeded.", 1: "failed."), !
 		if (decompressedData '= s) {
