@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 16:38:02">
+<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 16:49:10">
 <Class name="com.intersystems.persistence.objbinding.PersistenceManagerTest">
 <Final>1</Final>
 <Abstract>1</Abstract>
 <Hidden>1</Hidden>
-<TimeChanged>63133,59336.538357</TimeChanged>
+<TimeChanged>63133,60464.601395</TimeChanged>
 <TimeCreated>63105,63347.210154</TimeCreated>
 
 <Method name="Main">
@@ -14,7 +14,6 @@ Entry point for tests run from Cache'</Description>
 <ClassMethod>1</ClassMethod>
 <ServerOnly>1</ServerOnly>
 <Implementation><![CDATA[
-	
 	do ..TestBinaryFileCompression()
 	do ..TestAsciiCompression()
 	do ..TestCyrillicCompression()
@@ -84,7 +83,7 @@ Entry point for tests run from Cache'</Description>
 	try {
 		set compressedData = $system.Util.Compress(s)
 		write l, " compressed to ", $length(compressedData), !
-		write "Decompression ", $select($system.Util.Decompress(compressedData) = s : "succeeded.", 1: "failed."), !
+		write "Decompression succeeded: ", ..BooleanToString($system.Util.Decompress(compressedData) = s), !
 	} catch (e) {
 		write e.DisplayString(), !
 	}
@@ -95,7 +94,7 @@ Entry point for tests run from Cache'</Description>
 		write l, " compressed to ", $length(compressedData), !
 		#dim decompressedData as %String = ##class(PersistenceManager).Decompress(compressedData)
 		write "... decompressed to ", $length(decompressedData), !
-		write "Decompression ", $select(decompressedData = s : "succeeded.", 1: "failed."), !
+		write "Decompression succeeded: ", ..BooleanToString(decompressedData = s), !
 		if (decompressedData '= s) {
 			#dim i as %Integer
 			#dim errorSeen as %Boolean = 0
@@ -157,7 +156,7 @@ Entry point for tests run from Cache'</Description>
 	#dim file as %File = ##class(%File).%New(filename)
 
 	write "File: ", filename, "; size: ", file.Size, !
-	write "Fits into a single string: ", $case(file.Size <= $$$MaxStringLength, 1: "yes", :"no"), !
+	write "Fits into a single string: ", ..BooleanToString(file.Size <= $$$MaxStringLength), !
 	#dim contents as %String = ..GetFileContents(file)
 	write $length(contents), " byte(s) read", !
 
