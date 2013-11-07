@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 14:15:38">
+<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 15:44:47">
 <Class name="com.intersystems.persistence.objbinding.PersistenceManagerTest">
 <Final>1</Final>
 <Abstract>1</Abstract>
 <Hidden>1</Hidden>
-<TimeChanged>63112,40404.994411</TimeChanged>
+<TimeChanged>63133,56578.660678</TimeChanged>
 <TimeCreated>63105,63347.210154</TimeCreated>
 
 <Method name="Main">
@@ -177,7 +177,9 @@ Entry point for tests run from Cache'</Description>
 		#dim outName1 as %String = "out1.bin"
 		#dim out1 as %File = ##class(%File).%New(outName1)
 		do out1.Open("WNU:/IOTABLE=""RAW""")
-		do out1.Write(##class(PersistenceManager).Decompress(##class(PersistenceManager).Compress(contents)))
+		#dim decompressedContents as %String = ##class(PersistenceManager).Decompress(##class(PersistenceManager).Compress(contents))
+		w "Binary data equals: ", ..BooleanToString(decompressedContents = contents), !
+		do out1.Write(decompressedContents)
 		do out1.Close()
 		write out1.Size, " byte(s) written (w/compression)", !
 	} catch (e) {
