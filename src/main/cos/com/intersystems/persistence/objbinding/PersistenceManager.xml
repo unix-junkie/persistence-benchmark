@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 14:15:22">
+<Class name="com.intersystems.persistence.objbinding.PersistenceManager">
+<Final>1</Final>
+<Abstract>1</Abstract>
+<Import>%Exception</Import>
+<TimeChanged>63113,70620.657214</TimeChanged>
+<TimeCreated>63105,63347.210154</TimeCreated>
+
+<Method name="Compress">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>data:%String,keepTempFiles:%Boolean=0</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	if (data = "") {
+		set $ecode = ""
+		throw ##class(SystemException).%New("<ILLEGAL VALUE>", "78", $stack($stack(-1), "PLACE"))
+	}
+
+	#dim io = $io
+
+	#dim filename as %String = "c-" _ $system.Util.CreateGUID() _ ".gz"
+	open filename:("WLUN":/IOTABLE=$select(..IsUnicode(data): "UTF8", 1: "RAW") :/GZIP=9)
+	use filename
+	write data
+	close filename
+
+	#dim bytesWritten as %Integer = ##class(%File).GetFileSize(filename)
+	open filename:($select(keepTempFiles: "RLU", 1: "RLUD"):/IOTABLE="RAW")
+	use filename
+	try {
+		#dim compressedData as %String
+		read compressedData#$$$MaxStringLength
+	} catch {
+		close filename
+		use io
+		throw
+	}
+
+	close filename
+	use io
+
+	#dim bytesRead as %Integer = $length(compressedData)
+	if (bytesRead '= bytesWritten) {
+		throw ##class(SystemException).%New(, , , "Compress(): " _ bytesRead _ " byte(s) read; expected: " _ bytesWritten)
+	}
+
+	return compressedData
+]]></Implementation>
+</Method>
+
+<Method name="Decompress">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>data:%String,keepTempFiles:%Boolean=0</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	#dim binary as %String = ..DecompressImpl(data, "RAW", keepTempFiles)
+	#dim unicode as %String = ..DecompressImpl(data, "UTF8", keepTempFiles)
+	/*
+	 * If both decompression results are the same, no further compression is necessary.
+	 */
+	if (binary = unicode) {
+		return unicode
+	}
+	/*
+	 * We test whether a compressed result is the same as input.
+	 * If both results match the input, we prefer the Unicode version.
+	 */
+	return $select(..Compress(unicode) = data : unicode, 1 : binary)
+]]></Implementation>
+</Method>
+
+<Method name="DecompressUnicode">
+<Description><![CDATA[
+An internal method for testing <a href = "http://turbo.iscinternal.com/prodlog/itemedit.csp?OBJID=115879">PL115879</a>.]]></Description>
+<Internal>1</Internal>
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<FormalSpec>data:%String,keepTempFiles:%Boolean=0</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[..DecompressImpl(data, "UTF8", keepTempFiles)
+]]></Implementation>
+</Method>
+
+<Method name="DecompressImpl">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>data:%String,iotable:%String,keepTempFiles:%Boolean</FormalSpec>
+<Private>1</Private>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	if (data = "") {
+		set $ecode = ""
+		throw ##class(SystemException).%New("<ILLEGAL VALUE>", "78", $stack($stack(-1), "PLACE"))
+	}
+
+	#dim io = $io
+
+	#dim filename as %String = "d-" _ $system.Util.CreateGUID() _ ".gz"
+	open filename:("WLUN":/IOTABLE="RAW")
+	use filename
+	write data
+	close filename
+
+	#dim bytesWritten as %Integer = ##class(%File).GetFileSize(filename)
+	if ($length(data) '= bytesWritten) {
+		throw ##class(SystemException).%New(, , , "Decompress(): " _ bytesWritten _ " byte(s) written; expected: " _ $length(data))
+	}
+
+	open filename:($select(keepTempFiles: "RLU", 1: "RLUD"):/IOTABLE=iotable:/GZIP=9)
+	use filename
+	#dim e as SystemException
+	try {
+		#dim decompressedData as %String
+		read decompressedData#$$$MaxStringLength
+	} catch (e) {
+		if (e.Name = "<ENDOFFILE>") {
+			/*
+			 * We're trying to read an empty gzip stream.
+			 */
+			set decompressedData = ""
+		} else {
+			close filename
+			use io
+			throw e
+		}
+	}
+	close filename
+	use io	
+
+	return decompressedData
+]]></Implementation>
+</Method>
+
+<Method name="IsUnicode">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>s:%String</FormalSpec>
+<Private>1</Private>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	/*
+	 * 8-bit instances don't have Unicode strings.
+	 */
+	if ('$system.Version.IsUnicode()) {
+		return 0
+	}
+
+	#dim i as %Integer
+	for i = 1:1:$length(s) {
+		if ($ascii(s, i) > 255) {
+			return 1
+		}
+	}
+	return 0
+]]></Implementation>
+</Method>
+
+<Method name="GetMaxStringLength">
+<Description><![CDATA[
+Return 3608373 until
+<a href = "http://turbo.iscinternal.com/prodlog/itemedit.csp?OBJID=116022">PL 116022</a>
+is fixed.]]></Description>
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[$select(0: $$$MaxStringLength, 1: 3608373)
+]]></Implementation>
+</Method>
+</Class>
+</Export>
