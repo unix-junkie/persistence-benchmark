@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 16:23:24">
+<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 16:37:56">
 <Class name="com.intersystems.persistence.objbinding.PersistenceManager">
 <Final>1</Final>
 <Abstract>1</Abstract>
 <Import>%Exception</Import>
-<TimeChanged>63133,58958.221849</TimeChanged>
+<TimeChanged>63133,59556.405758</TimeChanged>
 <TimeCreated>63105,63347.210154</TimeCreated>
 
 <Method name="Compress">
@@ -20,7 +20,7 @@
 	#dim io = $io
 
 	#dim filename as %String = "c-" _ $system.Util.CreateGUID() _ ".gz"
-	open filename:("WLUN":/IOTABLE=$select(..IsUnicode(data): "UTF8", 1: "RAW") :/GZIP=9)
+	open filename:("WLUN":/IOTABLE="UTF8":/GZIP=9)
 	use filename
 	write data
 	close filename
@@ -54,40 +54,6 @@
 <FormalSpec>data:%String</FormalSpec>
 <ReturnType>%String</ReturnType>
 <Implementation><![CDATA[
-	#dim binary as %String = ..DecompressImpl(data, "RAW")
-	#dim unicode as %String = ..DecompressImpl(data, "UTF8")
-	/*
-	 * If both decompression results are the same, no further compression is necessary.
-	 */
-	if (binary = unicode) {
-		return unicode
-	}
-	/*
-	 * We test whether a compressed result is the same as input.
-	 * If both results match the input, we prefer the Unicode version.
-	 */
-	return $select(..Compress(unicode) = data : unicode, 1 : binary)
-]]></Implementation>
-</Method>
-
-<Method name="DecompressUnicode">
-<Description><![CDATA[
-An internal method for testing <a href = "http://turbo.iscinternal.com/prodlog/itemedit.csp?OBJID=115879">PL115879</a>.]]></Description>
-<Internal>1</Internal>
-<ClassMethod>1</ClassMethod>
-<CodeMode>expression</CodeMode>
-<FormalSpec>data:%String</FormalSpec>
-<ReturnType>%String</ReturnType>
-<Implementation><![CDATA[..DecompressImpl(data, "UTF8")
-]]></Implementation>
-</Method>
-
-<Method name="DecompressImpl">
-<ClassMethod>1</ClassMethod>
-<FormalSpec>data:%String,iotable:%String</FormalSpec>
-<Private>1</Private>
-<ReturnType>%String</ReturnType>
-<Implementation><![CDATA[
 	if (data = "") {
 		set $ecode = ""
 		throw ##class(SystemException).%New("<ILLEGAL VALUE>", "78", $stack($stack(-1), "PLACE"))
@@ -106,7 +72,7 @@ An internal method for testing <a href = "http://turbo.iscinternal.com/prodlog/i
 		throw ##class(SystemException).%New(, , , "Decompress(): " _ bytesWritten _ " byte(s) written; expected: " _ $length(data))
 	}
 
-	open filename:("RLUD":/IOTABLE=iotable:/GZIP=9)
+	open filename:("RLUD":/IOTABLE="UTF8":/GZIP=9)
 	use filename
 	#dim e as SystemException
 	try {
@@ -128,29 +94,6 @@ An internal method for testing <a href = "http://turbo.iscinternal.com/prodlog/i
 	use io	
 
 	return decompressedData
-]]></Implementation>
-</Method>
-
-<Method name="IsUnicode">
-<ClassMethod>1</ClassMethod>
-<FormalSpec>s:%String</FormalSpec>
-<Private>1</Private>
-<ReturnType>%Boolean</ReturnType>
-<Implementation><![CDATA[
-	/*
-	 * 8-bit instances don't have Unicode strings.
-	 */
-	if ('$system.Version.IsUnicode()) {
-		return 0
-	}
-
-	#dim i as %Integer
-	for i = 1:1:$length(s) {
-		if ($ascii(s, i) > 255) {
-			return 1
-		}
-	}
-	return 0
 ]]></Implementation>
 </Method>
 
