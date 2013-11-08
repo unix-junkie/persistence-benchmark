@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 16:49:10">
+<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-08 14:41:17">
 <Class name="com.intersystems.persistence.objbinding.PersistenceManagerTest">
 <Final>1</Final>
 <Abstract>1</Abstract>
 <Hidden>1</Hidden>
-<TimeChanged>63133,60464.601395</TimeChanged>
+<TimeChanged>63134,44219.674667</TimeChanged>
 <TimeCreated>63105,63347.210154</TimeCreated>
 
 <Method name="Main">
@@ -53,7 +53,7 @@ Entry point for tests run from Cache'</Description>
 	do ..TestCompression(alphabet)
 
 	#dim data as %String = ""
-	; decompressed data not the same
+	; PL 116875: decompressed data not the same
 	write "---- Compressing a string longer than 16434 symbols (extra characters on decompression)", !
 	set data = ""
 	for i = 1:1:249 {
@@ -61,7 +61,7 @@ Entry point for tests run from Cache'</Description>
 	}
 	do ..TestCompression(data)
 	
-	; <SYSTEM> 10 zDecompress+18^com.intersystems.persistence.objbinding.PersistenceManager.2
+	; PL 116876: <SYSTEM> 10 zDecompress+18^com.intersystems.persistence.objbinding.PersistenceManager.2
 	write "---- Compressing a string which is 147180 chars long (<SYSTEM>)", !
 	set data = ""
 	for i = 1:1:2230 {
