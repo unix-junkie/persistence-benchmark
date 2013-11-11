@@ -90,7 +90,7 @@ public final class MainFrame extends JFrame {
 
 		tabbedPane.addTab("General", generalSettings);
 		for (final Persister persister : persisters) {
-			final ConnectionParametersPanel<?> connectionParameters = persister.getConnectionParameters().getView();
+			final ConnectionParametersPanel connectionParameters = persister.getConnectionParameters().getView();
 			tabbedPane.addTab(connectionParameters.getName(), connectionParameters);
 		}
 

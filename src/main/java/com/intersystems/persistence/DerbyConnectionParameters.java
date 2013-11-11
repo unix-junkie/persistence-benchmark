@@ -9,7 +9,7 @@ import com.intersystems.persistence.ui.DerbyConnectionParametersPanel;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class DerbyConnectionParameters extends JdbcConnectionParameters<DerbyPersister> {
+public final class DerbyConnectionParameters extends JdbcConnectionParameters {
 	private String databaseName;
 
 	private DerbyConnectionParametersPanel view;
@@ -38,7 +38,7 @@ public final class DerbyConnectionParameters extends JdbcConnectionParameters<De
 	 * @see ConnectionParameters#getView()
 	 */
 	@Override
-	public ConnectionParametersPanel<DerbyPersister> getView() {
+	public ConnectionParametersPanel getView() {
 		return this.view == null
 				? this.view = new DerbyConnectionParametersPanel(this)
 				: this.view;

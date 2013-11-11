@@ -17,7 +17,7 @@ import java.sql.Timestamp;
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
 public abstract class JdbcPersister extends AbstractPersister {
-	protected final JdbcConnectionParameters<? extends JdbcPersister> connectionParameters;
+	protected final JdbcConnectionParameters connectionParameters;
 
 	private Connection conn;
 
@@ -26,7 +26,7 @@ public abstract class JdbcPersister extends AbstractPersister {
 	/**
 	 * @param connectionParameters
 	 */
-	protected JdbcPersister(final JdbcConnectionParameters<? extends JdbcPersister> connectionParameters) {
+	protected JdbcPersister(final JdbcConnectionParameters connectionParameters) {
 		this.connectionParameters = connectionParameters;
 	}
 

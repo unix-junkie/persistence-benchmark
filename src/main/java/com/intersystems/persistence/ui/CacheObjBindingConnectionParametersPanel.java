@@ -6,12 +6,11 @@ package com.intersystems.persistence.ui;
 import java.awt.Component;
 
 import com.intersystems.persistence.CacheObjBindingConnectionParameters;
-import com.intersystems.persistence.CacheObjBindingPersister;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class CacheObjBindingConnectionParametersPanel extends ConnectionParametersPanel<CacheObjBindingPersister> {
+public final class CacheObjBindingConnectionParametersPanel extends ConnectionParametersPanel {
 	private static final long serialVersionUID = 2425121880992010985L;
 
 	/**

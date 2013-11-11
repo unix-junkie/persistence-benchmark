@@ -17,12 +17,11 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import com.intersystems.persistence.DerbyConnectionParameters;
-import com.intersystems.persistence.DerbyPersister;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class DerbyConnectionParametersPanel extends JdbcConnectionParametersPanel<DerbyPersister> {
+public final class DerbyConnectionParametersPanel extends JdbcConnectionParametersPanel {
 	private static final long serialVersionUID = -5202714019412398701L;
 
 	/**

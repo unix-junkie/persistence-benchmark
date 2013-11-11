@@ -31,7 +31,7 @@ public interface Persister {
 	/**
 	 * @return a shared copy used for state transfer.
 	 */
-	ConnectionParameters<?> getConnectionParameters();
+	ConnectionParameters getConnectionParameters();
 
 
 	TestResult setUp();

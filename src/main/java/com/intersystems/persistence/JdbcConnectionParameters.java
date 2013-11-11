@@ -9,7 +9,7 @@ import com.intersystems.persistence.ui.JdbcConnectionParametersPanel;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public abstract class JdbcConnectionParameters<T extends JdbcPersister> implements ConnectionParameters<T> {
+public abstract class JdbcConnectionParameters implements ConnectionParameters {
 	private String url;
 
 	private boolean autoCommit = true;
@@ -19,7 +19,7 @@ public abstract class JdbcConnectionParameters<T extends JdbcPersister> implemen
 	private String password;
 
 
-	private JdbcConnectionParametersPanel<T> view;
+	private JdbcConnectionParametersPanel view;
 
 	/**
 	 * @param url
@@ -94,9 +94,9 @@ public abstract class JdbcConnectionParameters<T extends JdbcPersister> implemen
 	 * @see ConnectionParameters#getView()
 	 */
 	@Override
-	public ConnectionParametersPanel<T> getView() {
+	public ConnectionParametersPanel getView() {
 		return this.view == null
-				? this.view = new JdbcConnectionParametersPanel<T>(this)
+				? this.view = new JdbcConnectionParametersPanel(this)
 				: this.view;
 	}
 }

@@ -11,7 +11,7 @@ import com.intersystems.persistence.ui.CacheExtremeTcpConnectionParametersPanel;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class CacheExtremeConnectionParameters implements ConnectionParameters<CacheExtremePersister> {
+public final class CacheExtremeConnectionParameters implements ConnectionParameters {
 	private final String namespace;
 
 	private final String user;

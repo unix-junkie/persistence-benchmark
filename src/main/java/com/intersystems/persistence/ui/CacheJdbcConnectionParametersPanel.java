@@ -22,12 +22,11 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 
 import com.intersystems.persistence.CacheJdbcConnectionParameters;
-import com.intersystems.persistence.CacheJdbcPersister;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class CacheJdbcConnectionParametersPanel extends JdbcConnectionParametersPanel<CacheJdbcPersister> {
+public final class CacheJdbcConnectionParametersPanel extends JdbcConnectionParametersPanel {
 	private static final long serialVersionUID = -1733281789467997038L;
 
 	/**

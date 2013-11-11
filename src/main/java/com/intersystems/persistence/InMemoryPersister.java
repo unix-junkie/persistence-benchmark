@@ -66,7 +66,7 @@ public final class InMemoryPersister extends AbstractPersister {
 	 * @see Persister#getConnectionParameters()
 	 */
 	@Override
-	public ConnectionParameters<InMemoryPersister> getConnectionParameters() {
+	public ConnectionParameters getConnectionParameters() {
 		throw new UnsupportedOperationException();
 	}
 }

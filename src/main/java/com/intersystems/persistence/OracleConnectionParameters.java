@@ -8,7 +8,7 @@ import com.intersystems.persistence.ui.OracleConnectionParametersPanel;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class OracleConnectionParameters extends JdbcConnectionParameters<OraclePersister> {
+public final class OracleConnectionParameters extends JdbcConnectionParameters {
 	private final String host;
 
 	private final int port;

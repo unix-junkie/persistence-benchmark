@@ -8,7 +8,7 @@ import com.intersystems.persistence.ui.CacheObjBindingConnectionParametersPanel;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class CacheObjBindingConnectionParameters implements ConnectionParameters<CacheObjBindingPersister> {
+public final class CacheObjBindingConnectionParameters implements ConnectionParameters {
 	private String url;
 
 	private boolean autoCommit = true;

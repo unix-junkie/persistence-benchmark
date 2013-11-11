@@ -22,12 +22,11 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 
 import com.intersystems.persistence.OracleConnectionParameters;
-import com.intersystems.persistence.OraclePersister;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class OracleConnectionParametersPanel extends JdbcConnectionParametersPanel<OraclePersister> {
+public final class OracleConnectionParametersPanel extends JdbcConnectionParametersPanel {
 	private static final long serialVersionUID = -2207277781099705804L;
 
 	/**

@@ -17,18 +17,17 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import com.intersystems.persistence.JdbcConnectionParameters;
-import com.intersystems.persistence.JdbcPersister;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public class JdbcConnectionParametersPanel<T extends JdbcPersister> extends ConnectionParametersPanel<T> {
+public class JdbcConnectionParametersPanel extends ConnectionParametersPanel {
 	private static final long serialVersionUID = -1545324097731349065L;
 
 	/**
 	 * @param connectionParameters
 	 */
-	public JdbcConnectionParametersPanel(final JdbcConnectionParameters<T> connectionParameters) {
+	public JdbcConnectionParametersPanel(final JdbcConnectionParameters connectionParameters) {
 		super(connectionParameters);
 
 		this.setLayout(new GridBagLayout());

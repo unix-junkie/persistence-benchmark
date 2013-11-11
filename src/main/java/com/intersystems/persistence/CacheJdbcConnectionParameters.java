@@ -8,7 +8,7 @@ import com.intersystems.persistence.ui.CacheJdbcConnectionParametersPanel;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class CacheJdbcConnectionParameters extends JdbcConnectionParameters<CacheJdbcPersister> {
+public final class CacheJdbcConnectionParameters extends JdbcConnectionParameters {
 	private final String host;
 
 	private final int port;
