@@ -3,8 +3,8 @@
  */
 package com.intersystems.persistence.ui;
 
+import com.intersystems.persistence.CacheExtremeConnectionParameters;
 import com.intersystems.persistence.CacheExtremePersister;
-import com.intersystems.persistence.ConnectionParameters;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
@@ -15,7 +15,7 @@ public abstract class CacheExtremeConnectionParametersPanel extends ConnectionPa
 	/**
 	 * @param connectionParameters
 	 */
-	protected CacheExtremeConnectionParametersPanel(final ConnectionParameters<CacheExtremePersister> connectionParameters) {
+	protected CacheExtremeConnectionParametersPanel(final CacheExtremeConnectionParameters connectionParameters) {
 		super(connectionParameters);
 	}
 }
