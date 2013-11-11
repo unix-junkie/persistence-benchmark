@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 16:37:56">
+<Class name="com.intersystems.persistence.objbinding.PersistenceManager">
+<Final>1</Final>
+<Abstract>1</Abstract>
+<Import>%Exception</Import>
+<TimeChanged>63133,59556.405758</TimeChanged>
+<TimeCreated>63105,63347.210154</TimeCreated>
+
+<Method name="Compress">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>data:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	if (data = "") {
+		set $ecode = ""
+		throw ##class(SystemException).%New("<ILLEGAL VALUE>", "78", $stack($stack(-1), "PLACE"))
+	}
+
+	#dim io = $io
+
+	#dim filename as %String = "c-" _ $system.Util.CreateGUID() _ ".gz"
+	open filename:("WLUN":/IOTABLE="UTF8":/GZIP=9)
+	use filename
+	write data
+	close filename
+
+	#dim bytesWritten as %Integer = ##class(%File).GetFileSize(filename)
+	open filename:("RLUD":/IOTABLE="RAW")
+	use filename
+	try {
+		#dim compressedData as %String
+		read compressedData#$$$MaxStringLength
+	} catch {
+		close filename
+		use io
+		throw
+	}
+
+	close filename
+	use io
+
+	#dim bytesRead as %Integer = $length(compressedData)
+	if (bytesRead '= bytesWritten) {
+		throw ##class(SystemException).%New(, , , "Compress(): " _ bytesRead _ " byte(s) read; expected: " _ bytesWritten)
+	}
+
+	return compressedData
+]]></Implementation>
+</Method>
+
+<Method name="Decompress">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>data:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	if (data = "") {
+		set $ecode = ""
+		throw ##class(SystemException).%New("<ILLEGAL VALUE>", "78", $stack($stack(-1), "PLACE"))
+	}
+
+	#dim io = $io
+
+	#dim filename as %String = "d-" _ $system.Util.CreateGUID() _ ".gz"
+	open filename:("WLUN":/IOTABLE="RAW")
+	use filename
+	write data
+	close filename
+
+	#dim bytesWritten as %Integer = ##class(%File).GetFileSize(filename)
+	if ($length(data) '= bytesWritten) {
+		throw ##class(SystemException).%New(, , , "Decompress(): " _ bytesWritten _ " byte(s) written; expected: " _ $length(data))
+	}
+
+	open filename:("RLUD":/IOTABLE="UTF8":/GZIP=9)
+	use filename
+	#dim e as SystemException
+	try {
+		#dim decompressedData as %String
+		read decompressedData#$$$MaxStringLength
+	} catch (e) {
+		if (e.Name = "<ENDOFFILE>") {
+			/*
+			 * We're trying to read an empty gzip stream.
+			 */
+			set decompressedData = ""
+		} else {
+			close filename
+			use io
+			throw e
+		}
+	}
+	close filename
+	use io	
+
+	return decompressedData
+]]></Implementation>
+</Method>
+
+<Method name="GetMaxStringLength">
+<Description><![CDATA[
+Return 3608373 until
+<a href = "http://turbo.iscinternal.com/prodlog/itemedit.csp?OBJID=116022">PL 116022</a>
+is fixed.]]></Description>
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[$select(0: $$$MaxStringLength, 1: 3608373)
+]]></Implementation>
+</Method>
+</Class>
+</Export>
