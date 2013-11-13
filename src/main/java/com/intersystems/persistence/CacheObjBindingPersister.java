@@ -124,6 +124,18 @@ public final class CacheObjBindingPersister extends CacheJdbcPersister {
 			/*
 			 * If we use a zero-length array here,
 			 * we'll receive an IllegalArgumentException.
+			 * 
+			 * Java Object Binding code checks the signature of %RegisteredObject.%New(),
+			 * which has exactly one argument w/o any default value.
+			 * 
+			 * Cache, on the other hand, passes the arguments to %OnNew()
+			 * in case it is overridden. If the number of
+			 * mandatory formal arguments (i. e. arguments w/o default values)
+			 * differs from the number of effective arguments,
+			 * then <PARAMETER> error is returned.
+			 * 
+			 * Bottom line: if you override %OnNew(), it should 
+			 * contain only a single mandatory formal argument.
 			 */
 			final Persistent e = (Persistent) newMethod.invoke(null, new Object[] {null});
 			final int statusCode = e.save();
