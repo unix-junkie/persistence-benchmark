@@ -7,11 +7,14 @@ import static com.intersys.cache.jbind.JBindDatabase.getDatabase;
 import static java.lang.System.out;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Map;
 
-import com.intersys.cache.SysDatabase;
+import com.intersys.cache.CacheObject;
+import com.intersys.cache.Dataholder;
 import com.intersys.classes.Persistent;
 import com.intersys.objects.CacheException;
+import com.intersys.objects.Database;
 import com.intersys.objects.StatusCode;
 import com.intersys.objects.reflect.CacheClass;
 import com.intersys.objects.reflect.CacheMethod;
@@ -46,7 +49,7 @@ public final class CacheObjBindingPersister extends CacheJdbcPersister {
 
 	private static final Object NO_ARGS[] = new Object[0];
 
-	private SysDatabase database;
+	private Database database;
 
 	private CacheClass clazz;
 
@@ -124,20 +127,26 @@ public final class CacheObjBindingPersister extends CacheJdbcPersister {
 			/*
 			 * If we use a zero-length array here,
 			 * we'll receive an IllegalArgumentException.
-			 * 
+			 *
 			 * Java Object Binding code checks the signature of %RegisteredObject.%New(),
 			 * which has exactly one argument w/o any default value.
-			 * 
+			 *
 			 * Cache, on the other hand, passes the arguments to %OnNew()
 			 * in case it is overridden. If the number of
 			 * mandatory formal arguments (i. e. arguments w/o default values)
 			 * differs from the number of effective arguments,
 			 * then <PARAMETER> error is returned.
-			 * 
-			 * Bottom line: if you override %OnNew(), it should 
+			 *
+			 * Bottom line: if you override %OnNew(), it should
 			 * contain only a single mandatory formal argument.
 			 */
 			final Persistent e = (Persistent) newMethod.invoke(null, new Object[] {null});
+			final CacheObject proxy = e.getProxy();
+			proxy.setProperty("Ticker", new Dataholder(event.ticker));
+			proxy.setProperty("Per", new Dataholder(Integer.valueOf(event.per)));
+			proxy.setProperty("TimeStamp", new Dataholder(new Timestamp(event.getTimestamp().getTime())));
+			proxy.setProperty("Last", new Dataholder(Double.valueOf(event.last)));
+			proxy.setProperty("Vol", new Dataholder(Long.valueOf(event.vol)));
 			final int statusCode = e.save();
 			if (statusCode != 1) {
 				out.println("%Save() returned " + statusCode);
