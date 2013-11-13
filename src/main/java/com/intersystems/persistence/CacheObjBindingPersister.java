@@ -3,7 +3,19 @@
  */
 package com.intersystems.persistence;
 
-import com.intersys.util.VersionInfo;
+import static com.intersys.cache.jbind.JBindDatabase.getDatabase;
+import static java.lang.System.out;
+
+import java.sql.SQLException;
+import java.util.Map;
+
+import com.intersys.cache.SysDatabase;
+import com.intersys.classes.Persistent;
+import com.intersys.objects.CacheException;
+import com.intersys.objects.StatusCode;
+import com.intersys.objects.reflect.CacheClass;
+import com.intersys.objects.reflect.CacheMethod;
+
 
 /**
  * Modes which should be implemented:
@@ -21,31 +33,43 @@ import com.intersys.util.VersionInfo;
  * 	<li>a server-side facade method is used which accepts multiple
  * 	objects serialized into a string which is then compressed.</li>
  * </ul>
+ *
+ * Server-side classes required:
+ * <ul>
+ * 	<li>{@code com.intersystems.persistence.objbinding.Event}</li>
+ * 	<li>{@code com.intersystems.persistence.objbinding.PersistenceManager}</li>
+ * </ul>
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class CacheObjBindingPersister extends AbstractPersister {
-	private final CacheObjBindingConnectionParameters connectionParameters;
+public final class CacheObjBindingPersister extends CacheJdbcPersister {
+	private static final String CACHE_CLASS_NAME = "com.intersystems.persistence.objbinding.Event";
 
+	private static final Object NO_ARGS[] = new Object[0];
+
+	private SysDatabase database;
+
+	private CacheClass clazz;
+
+	/**
+	 * @param host
+	 * @param port
+	 * @param namespace
+	 * @param username
+	 * @param password
+	 * @param autoCommit
+	 */
 	public CacheObjBindingPersister(final String host,
 			final int port,
 			final String namespace,
 			final String username,
 			final String password,
 			final boolean autoCommit) {
-		this.connectionParameters = new CacheObjBindingConnectionParameters(host,
+		super(new CacheObjBindingConnectionParameters(host,
 				port,
 				namespace,
 				username,
 				password,
-				autoCommit);
-	}
-
-	/**
-	 * @see Persister#getClientVersion()
-	 */
-	@Override
-	public String getClientVersion() {
- 		return "InterSystems Cach\u00e9 " + VersionInfo.getClientVersion() + " (auto-commit: " + this.connectionParameters.getAutoCommit() + ")";
+				autoCommit));
 	}
 
 	/**
@@ -53,7 +77,7 @@ public final class CacheObjBindingPersister extends AbstractPersister {
 	 */
 	@Override
 	public CacheObjBindingConnectionParameters getConnectionParameters() {
-		return this.connectionParameters;
+		return (CacheObjBindingConnectionParameters) this.connectionParameters;
 	}
 
 	/**
@@ -61,6 +85,28 @@ public final class CacheObjBindingPersister extends AbstractPersister {
 	 */
 	@Override
 	public TestResult setUp() {
+		try {
+			this.initConnection();
+		} catch (final ClassNotFoundException cnfe) {
+			return new TestResult(cnfe);
+		} catch (final SQLException sqle) {
+			printExceptionChain(sqle, System.out);
+
+			return new TestResult(sqle);
+		}
+
+		try {
+			this.database = getDatabase(this.conn);
+			this.clazz = this.database.getCacheClass(CACHE_CLASS_NAME);
+			final CacheMethod killExtent = this.clazz.getMethod("%KillExtent");
+			final StatusCode status = (StatusCode) killExtent.invoke(null, NO_ARGS);
+			if (status.isError()) {
+				System.out.println(status);
+			}
+		} catch (final CacheException ce) {
+			return new TestResult(ce);
+		}
+
 		return TestResult.NO_DATA;
 	}
 
@@ -69,7 +115,24 @@ public final class CacheObjBindingPersister extends AbstractPersister {
 	 */
 	@Override
 	public void persist(final Event event) {
-		// empty
+		if (this.database == null || this.clazz == null) {
+			return;
+		}
+
+		try {
+			final CacheMethod newMethod = this.clazz.getMethod("%New");
+			/*
+			 * If we use a zero-length array here,
+			 * we'll receive an IllegalArgumentException.
+			 */
+			final Persistent e = (Persistent) newMethod.invoke(null, new Object[] {null});
+			final int statusCode = e.save();
+			if (statusCode != 1) {
+				out.println("%Save() returned " + statusCode);
+			}
+		} catch (final CacheException ce) {
+			out.println(ce.getMessage());
+		}
 	}
 
 	/**
@@ -77,6 +140,23 @@ public final class CacheObjBindingPersister extends AbstractPersister {
 	 */
 	@Override
 	public void tearDown() {
-		// empty
+		if (this.database != null) {
+			if (this.clazz != null) {
+				this.clazz.close();
+				this.clazz = null;
+			}
+
+			try {
+				final Map<?, ?> m = this.database.close();
+				if (!m.isEmpty()) {
+					out.println(m);
+				}
+			} catch (final CacheException ce) {
+				out.println(ce.getMessage());
+			}
+			this.database = null;
+		}
+
+		super.tearDown();
 	}
 }
