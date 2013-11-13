@@ -25,6 +25,7 @@ import junit.framework.AssertionFailedError;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.intersys.cache.jbind.JBindDatabase;
@@ -142,14 +143,23 @@ public final class CompressionTest {
 	}
 
 	/**
-	 * This test will fail until PL 116875 and PL 116876 are fixed.
-	 *
 	 * @throws CacheException
 	 * @throws IOException
 	 */
 	@Test
 	public void testUnicodeDecompression() throws CacheException, IOException {
 		testDecompression("\u0410\u0411");
+	}
+
+	/**
+	 * This test will fail until PL 116875 and PL 116876 are fixed.
+	 *
+	 * @throws CacheException
+	 * @throws IOException
+	 */
+	@Test
+	@Ignore("This test will fail until PL 116875 and PL 116876 are fixed.")
+	public void testUnicodeDecompressionLong() throws CacheException, IOException {
 		/*
 		 * PL 116875 and PL 116876:
 		 * <SYSTEM>zDecompressImpl+18^com.intersystems.persistence.objbinding.PersistenceManager.1

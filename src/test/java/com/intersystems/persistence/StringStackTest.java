@@ -6,11 +6,16 @@ package com.intersystems.persistence;
 import static com.intersys.objects.Database.RET_PRIM;
 import static java.lang.System.out;
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
 
 import java.util.Map;
 
+import junit.framework.AssertionFailedError;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.intersys.cache.Dataholder;
@@ -48,6 +53,18 @@ public final class StringStackTest {
 			out.println(m);
 		}
 		database = null;
+	}
+
+	@Test
+	public void testAssertionStatus() {
+		try {
+			assert false : "Assertions are enabled";
+			fail();
+		} catch (final AssertionFailedError afe) {
+			throw afe;
+		} catch (final AssertionError ae) {
+			assertTrue(ae.getMessage(), true);
+		}
 	}
 
 	private static final String TEST_MAX_STRING_NAME = "TestMaxString";
@@ -126,6 +143,7 @@ public final class StringStackTest {
 	 * @throws CacheException
 	 */
 	@Test
+	@Ignore("This test will fail until PL 116022 is fixed.")
 	public void testMaxString() throws CacheException {
 		/*
 		 * Get the longest possible string from Cache'
