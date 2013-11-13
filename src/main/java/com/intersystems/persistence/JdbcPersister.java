@@ -19,7 +19,7 @@ import java.sql.Timestamp;
 public abstract class JdbcPersister extends AbstractPersister {
 	protected final JdbcConnectionParameters connectionParameters;
 
-	private Connection conn;
+	protected Connection conn;
 
 	private PreparedStatement pstmt;
 
@@ -89,7 +89,7 @@ public abstract class JdbcPersister extends AbstractPersister {
 	 * @param sqle
 	 * @param out
 	 */
-	private static void printExceptionChain(final SQLException sqle, final PrintStream out) {
+	protected static void printExceptionChain(final SQLException sqle, final PrintStream out) {
 		out.println(sqle.getMessage());
 
 		SQLException nextException = sqle;
@@ -102,7 +102,7 @@ public abstract class JdbcPersister extends AbstractPersister {
 	 * @see Persister#persist(Event)
 	 */
 	@Override
-	public final void persist(final Event event) {
+	public void persist(final Event event) {
 		if (this.conn == null || this.pstmt == null) {
 			return;
 		}
@@ -125,6 +125,15 @@ public abstract class JdbcPersister extends AbstractPersister {
 	@Override
 	public void tearDown() {
 		if (this.conn != null) {
+			if (this.pstmt != null) {
+				try {
+					this.pstmt.close();
+				} catch (final SQLException sqle) {
+					printExceptionChain(sqle, System.out);
+				}
+				this.pstmt = null;
+			}
+
 			try {
 				this.conn.commit();
 			} catch (final SQLException sqle) {
@@ -135,6 +144,7 @@ public abstract class JdbcPersister extends AbstractPersister {
 			} catch (final SQLException sqle) {
 				printExceptionChain(sqle, System.out);
 			}
+			this.conn = null;
 		}
 
 		this.setRunning(false);
@@ -151,7 +161,7 @@ public abstract class JdbcPersister extends AbstractPersister {
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	private void initConnection() throws ClassNotFoundException, SQLException {
+	protected void initConnection() throws ClassNotFoundException, SQLException {
 		Class.forName(this.getDriverClass().getName());
 
 		final String url = this.connectionParameters.getUrl();

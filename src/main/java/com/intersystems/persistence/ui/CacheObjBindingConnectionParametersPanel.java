@@ -10,7 +10,7 @@ import com.intersystems.persistence.CacheObjBindingConnectionParameters;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class CacheObjBindingConnectionParametersPanel extends ConnectionParametersPanel {
+public final class CacheObjBindingConnectionParametersPanel extends CacheJdbcConnectionParametersPanel {
 	private static final long serialVersionUID = 2425121880992010985L;
 
 	/**
@@ -18,6 +18,8 @@ public final class CacheObjBindingConnectionParametersPanel extends ConnectionPa
 	 */
 	public CacheObjBindingConnectionParametersPanel(final CacheObjBindingConnectionParameters connectionParameters) {
 		super(connectionParameters);
+
+		this.removeAll();
 	}
 
 	/**

@@ -26,7 +26,7 @@ import com.intersystems.persistence.CacheJdbcConnectionParameters;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class CacheJdbcConnectionParametersPanel extends JdbcConnectionParametersPanel {
+public class CacheJdbcConnectionParametersPanel extends JdbcConnectionParametersPanel {
 	private static final long serialVersionUID = -1733281789467997038L;
 
 	/**

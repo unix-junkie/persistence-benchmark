@@ -8,7 +8,7 @@ import com.intersystems.persistence.ui.CacheJdbcConnectionParametersPanel;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class CacheJdbcConnectionParameters extends JdbcConnectionParameters {
+public class CacheJdbcConnectionParameters extends JdbcConnectionParameters {
 	private final String host;
 
 	private final int port;
@@ -40,15 +40,15 @@ public final class CacheJdbcConnectionParameters extends JdbcConnectionParameter
 		this.namespace = namespace;
 	}
 
-	public String getHost() {
+	public final String getHost() {
 		return this.host;
 	}
 
-	public int getPort() {
+	public final int getPort() {
 		return this.port;
 	}
 
-	public String getNamespace() {
+	public final String getNamespace() {
 		return this.namespace;
 	}
 

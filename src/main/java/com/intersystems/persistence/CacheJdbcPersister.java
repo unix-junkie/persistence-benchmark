@@ -11,7 +11,7 @@ import com.intersys.util.VersionInfo;
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
  */
-public final class CacheJdbcPersister extends JdbcPersister {
+public class CacheJdbcPersister extends JdbcPersister {
 	/**
 	 * @param host
 	 * @param port
@@ -26,7 +26,7 @@ public final class CacheJdbcPersister extends JdbcPersister {
 			final String username,
 			final String password,
 			final boolean autoCommit) {
-		super(new CacheJdbcConnectionParameters(host,
+		this(new CacheJdbcConnectionParameters(host,
 				port,
 				namespace,
 				username,
@@ -35,10 +35,17 @@ public final class CacheJdbcPersister extends JdbcPersister {
 	}
 
 	/**
+	 * @param connectionParameters
+	 */
+	protected CacheJdbcPersister(final CacheJdbcConnectionParameters connectionParameters) {
+		super(connectionParameters);
+	}
+
+	/**
 	 * @see Persister#getClientVersion()
 	 */
 	@Override
-	public String getClientVersion() {
+	public final String getClientVersion() {
 		return "InterSystems Cach\u00e9 " + VersionInfo.getClientVersion() + " (auto-commit: " + this.connectionParameters.getAutoCommit() + ")";
 	}
 
@@ -46,7 +53,7 @@ public final class CacheJdbcPersister extends JdbcPersister {
 	 * @see JdbcPersister#getDriverClass()
 	 */
 	@Override
-	protected Class<CacheDriver> getDriverClass() {
+	protected final Class<CacheDriver> getDriverClass() {
 		return CacheDriver.class;
 	}
 
@@ -54,7 +61,7 @@ public final class CacheJdbcPersister extends JdbcPersister {
 	 * @see JdbcPersister#getCreateSql(DatabaseMetaData)
 	 */
 	@Override
-	protected String getCreateSql(final DatabaseMetaData metaData) {
+	protected final String getCreateSql(final DatabaseMetaData metaData) {
 		return "create table events(ticker %String(MAXLEN=32) not null, per %Integer(MINVAL=" + Integer.MIN_VALUE + ", MAXVAL=" + Integer.MAX_VALUE + ") not null, timestamp %TimeStamp not null, \"LAST\" %Double not null, vol %Integer(MINVAL=" + Long.MIN_VALUE + ", MAXVAL=" + Long.MAX_VALUE + ") not null)";
 	}
 
