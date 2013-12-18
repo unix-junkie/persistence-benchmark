@@ -47,6 +47,7 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 
+import com.intersystems.persistence.ConnectionParameters;
 import com.intersystems.persistence.Persister;
 import com.intersystems.persistence.TestPersistencePerformance;
 import com.intersystems.persistence.TestResult;
@@ -90,8 +91,12 @@ public final class MainFrame extends JFrame {
 
 		tabbedPane.addTab("General", generalSettings);
 		for (final Persister persister : persisters) {
-			final ConnectionParametersPanel connectionParameters = persister.getConnectionParameters().getView();
-			tabbedPane.addTab(connectionParameters.getName(), connectionParameters);
+			final ConnectionParameters connectionParameters = persister.getConnectionParameters();
+			if (connectionParameters == null) {
+				continue;
+			}
+			final ConnectionParametersPanel connectionParametersView = connectionParameters.getView();
+			tabbedPane.addTab(connectionParametersView.getName(), connectionParametersView);
 		}
 
 		final JLabel lblNewLabel = new JLabel("Dry-run cycles:");
