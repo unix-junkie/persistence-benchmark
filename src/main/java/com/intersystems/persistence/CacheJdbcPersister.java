@@ -45,7 +45,7 @@ public class CacheJdbcPersister extends JdbcPersister {
 	 * @see Persister#getClientVersion()
 	 */
 	@Override
-	public final String getClientVersion() {
+	public String getClientVersion() {
 		return "InterSystems Cach\u00e9 " + VersionInfo.getClientVersion() + " (auto-commit: " + this.connectionParameters.getAutoCommit() + ")";
 	}
 

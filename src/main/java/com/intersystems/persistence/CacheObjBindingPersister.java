@@ -18,15 +18,12 @@ import com.intersys.objects.Database;
 import com.intersys.objects.StatusCode;
 import com.intersys.objects.reflect.CacheClass;
 import com.intersys.objects.reflect.CacheMethod;
+import com.intersys.util.VersionInfo;
 
 
 /**
  * Modes which should be implemented:
  * <ul>
- * 	<li>objects are inserted using {@code %Library.ResultSet},</li>
- * 	<li>objects are inserted using {@code %SQL.Statement},</li>
- * 	<li>objects are instantiated server-side using {@code %New()},
- * 	downloaded to the client, initialized with data and saved using {@code %Save()};</li>
  * 	<li>a server-side facade method is used which accepts primitive
  * 	parameters (one per objects's field);</li>
  * 	<li>a server-side facade method is used which accepts an object
@@ -49,6 +46,8 @@ public final class CacheObjBindingPersister extends CacheJdbcPersister {
 
 	private static final Object NO_ARGS[] = new Object[0];
 
+	private final CacheObjBindingMode mode;
+
 	private Database database;
 
 	private CacheClass clazz;
@@ -60,19 +59,30 @@ public final class CacheObjBindingPersister extends CacheJdbcPersister {
 	 * @param username
 	 * @param password
 	 * @param autoCommit
+	 * @param mode
 	 */
 	public CacheObjBindingPersister(final String host,
 			final int port,
 			final String namespace,
 			final String username,
 			final String password,
-			final boolean autoCommit) {
+			final boolean autoCommit,
+			final CacheObjBindingMode mode) {
 		super(new CacheObjBindingConnectionParameters(host,
 				port,
 				namespace,
 				username,
 				password,
 				autoCommit));
+		this.mode = mode;
+	}
+
+	/**
+	 * @see Persister#getClientVersion()
+	 */
+	@Override
+	public String getClientVersion() {
+		return "InterSystems Cach\u00e9 Object Binding " + VersionInfo.getClientVersion() + " (auto-commit: " + this.connectionParameters.getAutoCommit() + "; " + this.mode + ")";
 	}
 
 	/**
@@ -123,33 +133,43 @@ public final class CacheObjBindingPersister extends CacheJdbcPersister {
 		}
 
 		try {
-			final CacheMethod newMethod = this.clazz.getMethod("%New");
-			/*
-			 * If we use a zero-length array here,
-			 * we'll receive an IllegalArgumentException.
-			 *
-			 * Java Object Binding code checks the signature of %RegisteredObject.%New(),
-			 * which has exactly one argument w/o any default value.
-			 *
-			 * Cache, on the other hand, passes the arguments to %OnNew()
-			 * in case it is overridden. If the number of
-			 * mandatory formal arguments (i. e. arguments w/o default values)
-			 * differs from the number of effective arguments,
-			 * then <PARAMETER> error is returned.
-			 *
-			 * Bottom line: if you override %OnNew(), it should
-			 * contain only a single mandatory formal argument.
-			 */
-			final Persistent e = (Persistent) newMethod.invoke(null, new Object[] {null});
-			final CacheObject proxy = e.getProxy();
-			proxy.setProperty("Ticker", new Dataholder(event.ticker));
-			proxy.setProperty("Per", new Dataholder(Integer.valueOf(event.per)));
-			proxy.setProperty("TimeStamp", new Dataholder(new Timestamp(event.getTimestamp().getTime())));
-			proxy.setProperty("Last", new Dataholder(Double.valueOf(event.last)));
-			proxy.setProperty("Vol", new Dataholder(Long.valueOf(event.vol)));
-			final int statusCode = e.save();
-			if (statusCode != 1) {
-				out.println("%Save() returned " + statusCode);
+			switch (this.mode) {
+			case PERSISTENT_PROXIES:
+				final CacheMethod newMethod = this.clazz.getMethod("%New");
+				/*
+				 * If we use a zero-length array here,
+				 * we'll receive an IllegalArgumentException.
+				 *
+				 * Java Object Binding code checks the signature of %RegisteredObject.%New(),
+				 * which has exactly one argument w/o any default value.
+				 *
+				 * Cache, on the other hand, passes the arguments to %OnNew()
+				 * in case it is overridden. If the number of
+				 * mandatory formal arguments (i. e. arguments w/o default values)
+				 * differs from the number of effective arguments,
+				 * then <PARAMETER> error is returned.
+				 *
+				 * Bottom line: if you override %OnNew(), it should
+				 * contain only a single mandatory formal argument.
+				 */
+				final Persistent e = (Persistent) newMethod.invoke(null, new Object[] {null});
+				final CacheObject proxy = e.getProxy();
+				proxy.setProperty("Ticker", new Dataholder(event.ticker));
+				proxy.setProperty("Per", new Dataholder(Integer.valueOf(event.per)));
+				proxy.setProperty("TimeStamp", new Dataholder(new Timestamp(event.getTimestamp().getTime())));
+				proxy.setProperty("Last", new Dataholder(Double.valueOf(event.last)));
+				proxy.setProperty("Vol", new Dataholder(Long.valueOf(event.vol)));
+				final int statusCode = e.save();
+				if (statusCode != 1) {
+					out.println("%Save() returned " + statusCode);
+				}
+				break;
+			case LIBRARY_RESULT_SET:
+				break;
+			case SQL_STATEMENT:
+				break;
+			default:
+				break;
 			}
 		} catch (final CacheException ce) {
 			out.println(ce.getMessage());
