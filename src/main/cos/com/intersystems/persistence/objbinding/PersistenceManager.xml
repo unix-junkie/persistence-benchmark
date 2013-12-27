@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2013.2 (Build 461U)" ts="2013-11-07 16:37:56">
+<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2014.1 (Build 541U)" ts="2013-12-27 18:40:48">
 <Class name="com.intersystems.persistence.objbinding.PersistenceManager">
 <Final>1</Final>
 <Abstract>1</Abstract>
@@ -99,13 +99,13 @@
 
 <Method name="GetMaxStringLength">
 <Description><![CDATA[
-Return 3608373 until
+Return 3116853 until
 <a href = "http://turbo.iscinternal.com/prodlog/itemedit.csp?OBJID=116022">PL 116022</a>
 is fixed.]]></Description>
 <ClassMethod>1</ClassMethod>
 <CodeMode>expression</CodeMode>
 <ReturnType>%Integer</ReturnType>
-<Implementation><![CDATA[$select(0: $$$MaxStringLength, 1: 3608373)
+<Implementation><![CDATA[$select(0: $$$MaxStringLength, 1: 3116853)
 ]]></Implementation>
 </Method>
 </Class>

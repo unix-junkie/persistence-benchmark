@@ -25,7 +25,6 @@ import junit.framework.AssertionFailedError;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.intersys.cache.jbind.JBindDatabase;
@@ -152,18 +151,15 @@ public final class CompressionTest {
 	}
 
 	/**
-	 * This test will fail until PL 116875 and PL 116876 are fixed.
+	 * Requires at least Cache 2013.1.4 to pass (see <a href =
+	 * "http://turbo.iscinternal.com/prodlog/devview.csp?Key=HYY1886">HYY1886</a>).
 	 *
 	 * @throws CacheException
 	 * @throws IOException
+	 * @see <a href = "http://turbo.iscinternal.com/prodlog/devview.csp?Key=HYY1886">HYY1886</a>
 	 */
 	@Test
-	@Ignore("This test will fail until PL 116875 and PL 116876 are fixed.")
 	public void testUnicodeDecompressionLong() throws CacheException, IOException {
-		/*
-		 * PL 116875 and PL 116876:
-		 * <SYSTEM>zDecompressImpl+18^com.intersystems.persistence.objbinding.PersistenceManager.1
-		 */
 		testDecompression(getLongString(clazz));
 	}
 
