@@ -34,6 +34,32 @@
 <Parameter name="MINVAL" value="-9223372036854775810"/>
 </Property>
 
+<Method name="PrepareResultSet">
+<Description><![CDATA[
+A workaround to be able to call <class>%ResultSet</class>.Prepare(sql) using Object Binding.
+
+Calling ResultSet._prepare(...) from Java with arbitrary arguments leads to
+<PARAMETER>Prepare^%SYS.DynamicQuery
+because <class>%ResultSet</class>.Prepare(...) sends 17 (1+16) arguments
+to Prepare^%SYS.DynamicQuery(...) while it only accepts 6 (1+5).]]></Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>rset:%ResultSet,sql:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	return rset.Prepare(sql)
+]]></Implementation>
+</Method>
+
+<Method name="ExecuteSqlStatement">
+<Description><![CDATA[
+A workaround to be able to call <class>%SQL.Statement</class>.%Execute(...) using Object Binding
+(see <a href = "http://turbo.iscinternal.com/prodlog/itemedit.csp?OBJID=58630">PL 58630</a>).]]></Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>stmt:%SQL.Statement,ticker:%String(MAXLEN=32),per:%Integer(MAXVAL=2147483647,MINVAL=-2147483648),timeStamp:%TimeStamp,last:%Double,vol:%Integer(MAXVAL=9223372036854775807,MINVAL=-9223372036854775810)</FormalSpec>
+<ReturnType>%SQL.StatementResult</ReturnType>
+<Implementation><![CDATA[	return stmt.%Execute(ticker, per, timeStamp, last, vol)
+]]></Implementation>
+</Method>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^com.intersystems.perC21B.EventD</DataLocation>
