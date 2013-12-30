@@ -6,7 +6,10 @@ package com.intersystems.persistence;
 import static java.lang.Double.doubleToLongBits;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
+import static java.nio.ByteBuffer.allocate;
+import static java.nio.ByteBuffer.wrap;
 
+import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,8 +45,10 @@ public final class Event {
 
 	private static final Object FORMAT_LOCK = new Object();
 
+	private static final int EXTRA_LENGTH = 29;
+
 	/**
-	 * @param ticker
+	 * @param ticker a non-empty ASCII string up to 255 characters long.
 	 * @param per
 	 * @param timestamp
 	 * @param last
@@ -54,7 +59,10 @@ public final class Event {
 			final Date timestamp,
 			final double last,
 			final long vol) {
-		if (ticker == null || ticker.length() == 0 || timestamp == null) {
+		if (ticker == null
+				|| ticker.length() == 0
+				|| ticker.length() > (0xff & (byte) -1)
+				|| timestamp == null) {
 			throw new IllegalArgumentException();
 		}
 
@@ -100,6 +108,30 @@ public final class Event {
 	}
 
 	/**
+	 * @param data
+	 * @see #toByteArray()
+	 */
+	public static Event valueOf(final byte data[]) {
+		if (data == null || data.length == 0) {
+			throw new IllegalArgumentException();
+		}
+		final ByteBuffer buffer = wrap(data);
+		final int tickerLength = 0xff & buffer.get();
+		if (tickerLength + EXTRA_LENGTH != data.length) {
+			throw new IllegalArgumentException();
+		}
+		final StringBuilder ticker = new StringBuilder(tickerLength);
+		for (int i = 0; i < tickerLength; i ++) {
+			ticker.append((char) buffer.get());
+		}
+		final int per = buffer.getInt();
+		final Date timestamp = new Date(buffer.getLong());
+		final double last = buffer.getDouble();
+		final long vol = buffer.getLong();
+		return new Event(ticker.toString(), per, timestamp, last, vol);
+	}
+
+	/**
 	 * @see Object#hashCode()
 	 */
 	@Override
@@ -133,5 +165,28 @@ public final class Event {
 					&& this.vol == that.vol;
 		}
 		return false;
+	}
+
+	/**
+	 * @see #valueOf(byte[])
+	 */
+	public byte[] toByteArray() {
+		final int tickerLength = this.ticker.length();
+		final ByteBuffer data = allocate(tickerLength + EXTRA_LENGTH);
+		// 0. Ticker length in bytes (event length is constant for the same ticker).
+		data.put((byte) tickerLength);
+		// 1. Ticker (ASCII is assumed)
+		for (int i = 0; i < tickerLength; i++) {
+			data.put((byte) this.ticker.charAt(i));
+		}
+		// 2. Per (4 bytes)
+		data.putInt(this.per);
+		// 3. Timestamp (8 bytes)
+		data.putLong(this.timestamp.getTime());
+		// 4. Last (8 bytes)
+		data.putDouble(this.last);
+		// 5. Vol (8 bytes)
+		data.putLong(this.vol);
+		return data.array();
 	}
 }
