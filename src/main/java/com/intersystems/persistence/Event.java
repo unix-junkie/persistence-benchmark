@@ -3,6 +3,7 @@
  */
 package com.intersystems.persistence;
 
+import static java.lang.Double.doubleToLongBits;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
@@ -18,7 +19,7 @@ import com.intersys.xep.annotations.Id;
  */
 public final class Event {
 	//*
-	private static java.util.concurrent.atomic.AtomicLong ID_GENERATOR = new java.util.concurrent.atomic.AtomicLong();
+	private static final java.util.concurrent.atomic.AtomicLong ID_GENERATOR = new java.util.concurrent.atomic.AtomicLong();
 
 	@Id(generated = false)
 	private final long id = ID_GENERATOR.incrementAndGet();
@@ -41,11 +42,22 @@ public final class Event {
 
 	private static final Object FORMAT_LOCK = new Object();
 
+	/**
+	 * @param ticker
+	 * @param per
+	 * @param timestamp
+	 * @param last
+	 * @param vol
+	 */
 	public Event(final String ticker,
-		final int per,
-		final Date timestamp,
-		final double last,
-		final long vol) {
+			final int per,
+			final Date timestamp,
+			final double last,
+			final long vol) {
+		if (ticker == null || ticker.length() == 0 || timestamp == null) {
+			throw new IllegalArgumentException();
+		}
+
 		this.ticker = ticker;
 		this.per = per;
 		this.timestamp = (Date) timestamp.clone();
@@ -53,6 +65,10 @@ public final class Event {
 		this.vol = vol;
 	}
 
+	/**
+	 * @param date
+	 * @param time
+	 */
 	private static Date parseDate(final String date, final String time) {
 		try {
 			synchronized (FORMAT_LOCK) {
@@ -68,6 +84,9 @@ public final class Event {
 		return (Date) this.timestamp.clone();
 	}
 
+	/**
+	 * @param s
+	 */
 	public static Event valueOf(final String s) {
 		final String[] fields = s.split("\\,");
 		if (fields.length != 6) {
@@ -95,5 +114,24 @@ public final class Event {
 		result = prime * result + (this.timestamp == null ? 0 : this.timestamp.hashCode());
 		result = prime * result + (int) (this.vol ^ this.vol >>> 32);
 		return result;
+	}
+
+	/**
+	 * @see Object#equals(Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj instanceof Event) {
+			final Event that = (Event) obj;
+			return doubleToLongBits(this.last) == doubleToLongBits(that.last)
+					&& this.per == that.per
+					&& this.ticker.equals(that.ticker)
+					&& this.timestamp.equals(that.timestamp)
+					&& this.vol == that.vol;
+		}
+		return false;
 	}
 }
