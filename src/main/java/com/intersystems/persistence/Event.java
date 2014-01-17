@@ -9,11 +9,14 @@ import static java.lang.Integer.parseInt;
 import static java.nio.ByteBuffer.allocate;
 import static java.nio.ByteBuffer.wrap;
 
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.intersys.xep.annotations.Id;
 
@@ -45,7 +48,13 @@ public final class Event {
 
 	private static final Object FORMAT_LOCK = new Object();
 
+	/**
+	 * The number of bytes needed to store the event except for its
+	 * {@link #ticker}.
+	 */
 	private static final int EXTRA_LENGTH = 29;
+
+	private static final Event EMPTY[] = new Event[0];
 
 	/**
 	 * @param ticker a non-empty ASCII string up to 255 characters long.
@@ -108,8 +117,13 @@ public final class Event {
 	}
 
 	/**
+	 * Reads an event from a byte array. The array is supposed to hold
+	 * only a single event. If you need to read multiple events, use
+	 * {@link #readAll(byte[])}.
+	 *
 	 * @param data
 	 * @see #toByteArray()
+	 * @see #readAll(byte[])
 	 */
 	public static Event valueOf(final byte data[]) {
 		if (data == null || data.length == 0) {
@@ -121,7 +135,7 @@ public final class Event {
 			throw new IllegalArgumentException();
 		}
 		final StringBuilder ticker = new StringBuilder(tickerLength);
-		for (int i = 0; i < tickerLength; i ++) {
+		for (int i = 0; i < tickerLength; i++) {
 			ticker.append((char) buffer.get());
 		}
 		final int per = buffer.getInt();
@@ -129,6 +143,44 @@ public final class Event {
 		final double last = buffer.getDouble();
 		final long vol = buffer.getLong();
 		return new Event(ticker.toString(), per, timestamp, last, vol);
+	}
+
+	/**
+	 * Unlike {@link #valueOf(byte[])}, de-serializes and returns
+	 * multiple events from a byte array.
+	 *
+	 * @param data
+	 * @see #valueOf(byte[])
+	 */
+	public static Event[] readAll(final byte data[]) {
+		if (data == null) {
+			throw new IllegalArgumentException();
+		}
+
+		if (data.length == 0) {
+			return EMPTY;
+		}
+
+		final List<Event> events = new ArrayList<Event>();
+
+		final ByteBuffer buffer = wrap(data);
+		try {
+			while (buffer.position() < buffer.limit()) {
+				final int tickerLength = 0xff & buffer.get();
+				final StringBuilder ticker = new StringBuilder(tickerLength);
+				for (int i = 0; i < tickerLength; i++) {
+					ticker.append((char) buffer.get());
+				}
+				final int per = buffer.getInt();
+				final Date timestamp = new Date(buffer.getLong());
+				final double last = buffer.getDouble();
+				final long vol = buffer.getLong();
+				events.add(new Event(ticker.toString(), per, timestamp, last, vol));
+			}
+		} catch (final BufferUnderflowException bue) {
+			throw new IllegalArgumentException(bue.getMessage(), bue);
+		}
+		return events.toArray(EMPTY);
 	}
 
 	/**
