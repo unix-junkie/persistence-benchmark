@@ -38,10 +38,29 @@ public final class EventWriter {
 	 */
 	public void write(final Event event) {
 		final byte serialized[] = event.toByteArray();
+		if (serialized.length > this.maximumBatchLength) {
+			throw new IllegalArgumentException("Event too long: " + serialized.length + " > " + this.maximumBatchLength);
+		}
+		if (this.buffer.size() + serialized.length > this.maximumBatchLength) {
+			this.flush();
+		}
 		try {
-			if (this.buffer.size() + serialized.length <= this.maximumBatchLength) {
-				this.buffer.write(serialized);
-			} else {
+			this.buffer.write(serialized);
+		} catch (final IOException ioe) {
+			/*
+			 * Never.
+			 */
+		}
+	}
+
+	/**
+	 * Flushes this writer's internal buffer, passing any events
+	 * contained in the buffer to the {@link EventBatchProcessor}
+	 * supplied at creation time.
+	 */
+	public void flush() {
+		try {
+			if (this.buffer.size() > 0) {
 				this.buffer.flush();
 				this.buffer.close();
 				final byte batch[] = this.buffer.toByteArray();
