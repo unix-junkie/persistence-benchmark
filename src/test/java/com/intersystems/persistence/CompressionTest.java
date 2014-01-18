@@ -3,6 +3,8 @@
  */
 package com.intersystems.persistence;
 
+import static com.intersystems.persistence.FastObjBindingPersister.GET_MAX_STRING_LENGTH_METHOD_NAME;
+import static com.intersystems.persistence.FastObjBindingPersister.PERSISTENCE_MANAGER_CLASS_NAME;
 import static java.lang.System.out;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -38,8 +40,6 @@ import com.intersys.objects.reflect.CacheMethod;
  */
 @SuppressWarnings("static-method")
 public final class CompressionTest {
-	private static final String CACHE_CLASS_NAME = "com.intersystems.persistence.objbinding.PersistenceManager";
-
 	private static Database database;
 
 	private static CacheClass clazz;
@@ -50,7 +50,7 @@ public final class CompressionTest {
 	@BeforeClass
 	public static void setUp() throws CacheException {
 		database = new JBindDatabase("jdbc:Cache://localhost:56777/XEP", "_SYSTEM", "SYS");
-		clazz = database.getCacheClass(CACHE_CLASS_NAME);
+		clazz = database.getCacheClass(PERSISTENCE_MANAGER_CLASS_NAME);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public final class CompressionTest {
 	 * @throws CacheException
 	 */
 	static String getLongString(final CacheClass cacheClass) throws CacheException {
-		final CacheMethod getMaxStringLength = cacheClass.getMethod("GetMaxStringLength");
+		final CacheMethod getMaxStringLength = cacheClass.getMethod(GET_MAX_STRING_LENGTH_METHOD_NAME);
 		final int maxStringLength = ((Integer) getMaxStringLength.invoke(null, new Object[0])).intValue();
 		final StringBuilder stringBuilder = new StringBuilder(maxStringLength);
 		for (int i = 0; i < maxStringLength; i++) {
