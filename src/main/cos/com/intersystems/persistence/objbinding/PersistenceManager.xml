@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2014.1 (Build 541U)" ts="2013-12-27 18:40:48">
+<Export generator="Cache" version="25" zv="Cache for UNIX (Apple Mac OS X for x86-64) 2014.1 (Build 541U)" ts="2014-01-20 01:28:48">
 <Class name="com.intersystems.persistence.objbinding.PersistenceManager">
 <Final>1</Final>
 <Abstract>1</Abstract>
 <Import>%Exception</Import>
-<TimeChanged>63133,59556.405758</TimeChanged>
+<TimeChanged>63207,5307.761673</TimeChanged>
 <TimeCreated>63105,63347.210154</TimeCreated>
 
 <Method name="Compress">
@@ -51,7 +51,7 @@
 
 <Method name="Decompress">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>data:%String</FormalSpec>
+<FormalSpec>data:%String,iotable:%String="UTF8"</FormalSpec>
 <ReturnType>%String</ReturnType>
 <Implementation><![CDATA[
 	if (data = "") {
@@ -72,7 +72,7 @@
 		throw ##class(SystemException).%New(, , , "Decompress(): " _ bytesWritten _ " byte(s) written; expected: " _ $length(data))
 	}
 
-	open filename:("RLUD":/IOTABLE="UTF8":/GZIP=9)
+	open filename:("RLUD":/IOTABLE=iotable:/GZIP=9)
 	use filename
 	#dim e as SystemException
 	try {
@@ -106,6 +106,79 @@ is fixed.]]></Description>
 <CodeMode>expression</CodeMode>
 <ReturnType>%Integer</ReturnType>
 <Implementation><![CDATA[$select(0: $$$MaxStringLength, 1: 3116853)
+]]></Implementation>
+</Method>
+
+<Method name="Save">
+<Description>
+Accepts a gzip-compressed batch of events, decompresses and saves it.</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>compressedData:%String</FormalSpec>
+<Implementation><![CDATA[
+	/*
+	 * Decompressing binary data as UTF8 leads to data corruption.
+	 */
+	#dim data = ..Decompress(compressedData, "RAW")
+	/*
+	 * 1-based index.
+	 */
+	#dim position as %Integer = 1
+	while (position <= $length(data)) {
+		#dim tickerLength as %Integer = $ascii($extract(data, position))
+		set position = position + 1 // 1 byte read
+		#dim ticker as %String = $extract(data, position, position + tickerLength - 1)
+		set position = position + tickerLength // N bytes read
+		#dim per as %String = ..ReadIeee754Integer($extract(data, position, position + 3))
+		set position = position + 4 // 4 bytes read
+		#dim timestamp as %String = ..TimeMillisToTimeStamp(..ReadIeee754Integer($extract(data, position, position + 7)))
+		set position = position + 8 // 8 bytes read
+		#dim last as %String = ..ReadIeee754Double($extract(data, position, position + 7))
+		set position = position + 8 // 8 bytes read
+		#dim vol as %String = ..ReadIeee754Integer($extract(data, position, position + 7))
+		set position = position + 8 // 8 bytes read
+		set ^com.intersystems.perC21B.EventD($increment(^com.intersystems.perC21B.EventD)) = $listbuild(ticker, per, timestamp, last, vol)
+	}
+]]></Implementation>
+</Method>
+
+<Method name="ReadIeee754Integer">
+<Description><![CDATA[
+Assumes <code>binaryInteger</code> is an unsigned value.]]></Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>binaryInteger:%String</FormalSpec>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[
+	#dim position as %Integer
+	#dim result as %integer = 0
+	for position = 1:1:$length(binaryInteger) {
+		set result = (256 * result) + $ascii($extract(binaryInteger, position))
+	}
+	return result
+]]></Implementation>
+</Method>
+
+<Method name="TimeMillisToTimeStamp">
+<Description><![CDATA[
+Converts the time in milliseconds since epoch (Jan 1st 1970 00:00:00 GMT) to <code>%TimeStamp</code>.
+Currently, the millisecond fraction is discarded.]]></Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>timeMillis:%Integer</FormalSpec>
+<ReturnType>%TimeStamp</ReturnType>
+<Implementation><![CDATA[
+	#dim timeSeconds as %Integer = timeMillis \ 1000
+	return ##class(%TimeStamp).OdbcToLogical($zdatetime($zdatetimeh(timeSeconds, -2), 3))
+]]></Implementation>
+</Method>
+
+<Method name="ReadIeee754Double">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>binaryDouble:%String</FormalSpec>
+<ReturnType>%Double</ReturnType>
+<Implementation><![CDATA[
+	/*
+	 * To be implemented
+	 */
+	return $double(0)
 ]]></Implementation>
 </Method>
 </Class>
