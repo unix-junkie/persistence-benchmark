@@ -90,6 +90,10 @@ public abstract class TestPersistencePerformance {
 		final Persister persisters[] = {
 			new DerbyPersister("XEP", true),
 			new OraclePersister(host, 1521, "XE", "SYSTEM", "SYSTEM", true),
+			new FastObjBindingPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
+			new CacheObjBindingPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
+			new CacheResultSetPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
+			new CacheSqlStatementPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
 			new CacheJdbcPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
 			new CacheExtremePersister(cacheNamespace, cacheUsername, cachePassword, false, false),
 			new CacheExtremePersister(cacheNamespace, cacheUsername, cachePassword, false, false, host, cachePort),
