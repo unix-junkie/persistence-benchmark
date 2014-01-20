@@ -166,7 +166,14 @@ Currently, the millisecond fraction is discarded.]]></Description>
 <ReturnType>%TimeStamp</ReturnType>
 <Implementation><![CDATA[
 	#dim timeSeconds as %Integer = timeMillis \ 1000
-	return ##class(%TimeStamp).OdbcToLogical($zdatetime($zdatetimeh(timeSeconds, -2), 3))
+	#dim millisFraction as %Integer = timeMillis # 1000
+	/*
+	 * Pad the millisFraction with zeroes.
+	 */
+	while ($length(millisFraction) < 3) {
+		set millisFraction = "0" _ millisFraction
+	}
+	return ##class(%TimeStamp).OdbcToLogical($zdatetime($zdatetimeh(timeSeconds, -2), 3) _ "." _ millisFraction)
 ]]></Implementation>
 </Method>
 
