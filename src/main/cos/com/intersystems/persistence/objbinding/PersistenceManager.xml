@@ -143,6 +143,7 @@ Accepts a gzip-compressed batch of events, decompresses and saves it.</Descripti
 
 <Method name="ReadIeee754Integer">
 <Description><![CDATA[
+Converts an IEEE 754 integer to Cach&eacute; <code>%Integer</code>.
 Assumes <code>binaryInteger</code> is an unsigned value.]]></Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>binaryInteger:%String</FormalSpec>
@@ -159,8 +160,7 @@ Assumes <code>binaryInteger</code> is an unsigned value.]]></Description>
 
 <Method name="TimeMillisToTimeStamp">
 <Description><![CDATA[
-Converts the time in milliseconds since epoch (Jan 1st 1970 00:00:00 GMT) to <code>%TimeStamp</code>.
-Currently, the millisecond fraction is discarded.]]></Description>
+Converts the time in milliseconds since epoch (Jan 1st 1970 00:00:00 GMT) to <code>%TimeStamp</code>.]]></Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>timeMillis:%Integer</FormalSpec>
 <ReturnType>%TimeStamp</ReturnType>
