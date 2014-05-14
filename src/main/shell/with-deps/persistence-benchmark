@@ -14,7 +14,7 @@ export CLASSPATH
 
 if [ -z "${GLOBALS_HOME}" ]
 then
-	export GLOBALS_HOME='/opt/intersystems/cache/2013.2.0'
+	export GLOBALS_HOME=$(ccontrol qlist | head -n1 | cut -d^ -f2)
 fi
 
 if [ ! -d "${GLOBALS_HOME}" ]
