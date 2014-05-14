@@ -4,7 +4,9 @@
 package com.intersystems.persistence;
 
 import static java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment;
+import static java.lang.Integer.getInteger;
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.getProperty;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
@@ -78,15 +80,20 @@ public abstract class TestPersistencePerformance {
 	 * @throws IOException
 	 */
 	public static void main(final String args[]) {
-		final String host = "localhost";
-		final int cachePort = 1972;
-		final String cacheNamespace = "USER";
-		final String cacheUsername = "_SYSTEM";
-		final String cachePassword = "SYS";
+		final String host = getProperty("benchmark.host", "localhost");
+		final int cachePort = getInteger("benchmark.cache.port", 1972).intValue();
+		final String cacheNamespace = getProperty("benchmark.cache.namespace", "USER");
+		final String cacheUsername = getProperty("benchmark.cache.username", "_SYSTEM");
+		final String cachePassword = getProperty("benchmark.cache.password", "SYS");
 
 		final Persister persisters[] = {
-			new DerbyPersister("XEP", true),
-			new OraclePersister(host, 1521, "XE", "SYSTEM", "SYSTEM", true),
+			new DerbyPersister(getProperty("benchmark.derby.database", "XEP"), true),
+			new OraclePersister(host,
+					getInteger("benchmark.oracle.port", 1521).intValue(),
+					getProperty("benchmark.oracle.schema", "XE"),
+					getProperty("benchmark.oracle.username", "SYSTEM"),
+					getProperty("benchmark.oracle.password", "SYSTEM"),
+					true),
 			new FastObjBindingPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
 			new CacheObjBindingPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
 			new CacheResultSetPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
