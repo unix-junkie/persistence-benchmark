@@ -89,9 +89,12 @@ public final class CacheExtremePersister extends AbstractPersister {
 			final String osName = getProperty("os.name");
 			final String javaSpecificationVersion = getProperty("java.specification.version");
 			final String javaVmSpecificationVersion = getProperty("java.vm.specification.version");
-			final boolean isMacOsX106 = osName.equals("Mac OS X") && (osVersion.equals("10.6") || osVersion.startsWith("10.6."));
-			final boolean isJava17 = javaSpecificationVersion.equals("1.7") && javaVmSpecificationVersion.equals("1.7");
-			if (isMacOsX106 && isJava17) {
+			final boolean isMacOsX = osName.equals("Mac OS X");
+			final boolean isJava16 = javaSpecificationVersion.equals("1.6") && javaVmSpecificationVersion.equals("1.6");
+			if (isMacOsX && !isJava16) {
+				/*
+				 * PL 115230
+				 */
 				return new TestResult("On " + osName + ' ' + osVersion + ", JNI connection is unstable when using Java " + javaSpecificationVersion);
 			}
 
