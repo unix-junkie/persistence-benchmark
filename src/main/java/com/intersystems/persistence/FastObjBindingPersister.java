@@ -26,19 +26,13 @@ public final class FastObjBindingPersister extends CacheObjBindingPersister {
 
 	private EventWriter out;
 
-	private final EventBatchProcessor batchProcessor = new EventBatchProcessor() {
-		/**
-		 * @see EventBatchProcessor#processBatch(byte[])
-		 */
-		@Override
-		public void processBatch(final byte[] compressedBatch) {
-			try {
-				FastObjBindingPersister.this.save.invoke(null, new String[] {new String(compressedBatch, "ISO-8859-1")});
-			} catch (final CacheException ce) {
-				ce.printStackTrace(System.out);
-			} catch (final UnsupportedEncodingException uee) {
-				uee.printStackTrace(System.out);
-			}
+	private final EventBatchProcessor batchProcessor = compressedBatch -> {
+		try {
+			FastObjBindingPersister.this.save.invoke(null, new String[] {new String(compressedBatch, "ISO-8859-1")});
+		} catch (final CacheException ce) {
+			ce.printStackTrace(System.out);
+		} catch (final UnsupportedEncodingException uee) {
+			uee.printStackTrace(System.out);
 		}
 	};
 

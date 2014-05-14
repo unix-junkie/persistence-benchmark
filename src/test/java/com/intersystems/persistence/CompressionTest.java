@@ -166,7 +166,6 @@ public final class CompressionTest {
 	/**
 	 * @throws CacheException
 	 */
-	@SuppressWarnings("unused")
 	@Test
 	public void testFailedCompression() throws CacheException {
 		/*

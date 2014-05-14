@@ -80,18 +80,12 @@ public final class EventTest {
 		 * with a batch processor.
 		 */
 		this.batchEventCount = 0;
-		final EventBatchProcessor batchProcessor = new EventBatchProcessor() {
-			/**
-			 * @see EventBatchProcessor#processBatch(byte[])
-			 */
-			@Override
-			public void processBatch(final byte compressedBatch[]) {
-				try {
-					EventTest.this.batchEventCount += readAll(decompress(compressedBatch)).length;
-				} catch (final IOException ioe) {
-					ioe.printStackTrace();
-					fail(ioe.getMessage());
-				}
+		final EventBatchProcessor batchProcessor = compressedBatch -> {
+			try {
+				EventTest.this.batchEventCount += readAll(decompress(compressedBatch)).length;
+			} catch (final IOException ioe) {
+				ioe.printStackTrace();
+				fail(ioe.getMessage());
 			}
 		};
 		final EventWriter out1 = new EventWriter(batchProcessor, maxStringLength);

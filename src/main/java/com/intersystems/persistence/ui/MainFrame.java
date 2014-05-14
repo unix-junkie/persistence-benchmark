@@ -16,8 +16,6 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -160,58 +158,36 @@ public final class MainFrame extends JFrame {
 
 		this.btnRun.setDefaultCapable(false);
 		this.btnRun.setEnabled(false);
-		this.btnRun.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				MainFrame.this.btnRun.setEnabled(false);
-				MainFrame.this.progressBar.setValue(0);
+		this.btnRun.addActionListener(e -> {
+			MainFrame.this.btnRun.setEnabled(false);
+			MainFrame.this.progressBar.setValue(0);
 
-				TestPersistencePerformance.submit(new Runnable() {
-					/**
-					 * @see Runnable#run()
+			TestPersistencePerformance.submit(() -> {
+				int j = 0;
+				for (final Persister persister : persisters) {
+					/*
+					 * Dry-run warm-up cycle
 					 */
-					@Override
-					public void run() {
-						int j = 0;
-						for (final Persister persister : persisters) {
-							/*
-							 * Dry-run warm-up cycle
-							 */
-							final int warmUpCycles = ((Integer) MainFrame.this.spinner.getValue()).intValue();
+					final int warmUpCycles = ((Integer) MainFrame.this.spinner.getValue()).intValue();
 
-							final int cycles = warmUpCycles + 1;
+					final int cycles = warmUpCycles + 1;
 
-							final TestResult testResult = persister.setUp();
-							if (testResult.isSuccessful()) {
-								for (int k = 0; k < cycles; k++) {
-									TestPersistencePerformance.process(persister, MainFrame.this.selectedFiles);
-								}
-							} else {
-								persister.setTestResult(testResult);
-							}
-							persister.tearDown();
-
-							final int value = ++j;
-							invokeLater(new Runnable() {
-								/**
-								 * @see Runnable#run()
-								 */
-								@Override
-								public void run() {
-									MainFrame.this.progressBar.setValue(value);
-								}
-							});
+					final TestResult testResult = persister.setUp();
+					if (testResult.isSuccessful()) {
+						for (int k = 0; k < cycles; k++) {
+							TestPersistencePerformance.process(persister, MainFrame.this.selectedFiles);
 						}
-
-						invokeLater(new Runnable() {
-							@Override
-							public void run() {
-								MainFrame.this.btnRun.setEnabled(true);
-							}
-						});
+					} else {
+						persister.setTestResult(testResult);
 					}
-				});
-			}
+					persister.tearDown();
+
+					final int value = ++j;
+					invokeLater(() -> MainFrame.this.progressBar.setValue(value));
+				}
+
+				invokeLater(() -> MainFrame.this.btnRun.setEnabled(true));
+			});
 		});
 
 		statusBar.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -235,33 +211,30 @@ public final class MainFrame extends JFrame {
 		menuBar.add(mnFile);
 
 		final JMenuItem mntmOpen = new JMenuItem("Open");
-		mntmOpen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				final JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setCurrentDirectory(new File(getProperty("user.dir")));
-				fileChooser.setAcceptAllFileFilterUsed(false);
-				fileChooser.setFileSelectionMode(FILES_ONLY);
-				fileChooser.setDialogType(OPEN_DIALOG);
-				fileChooser.setMultiSelectionEnabled(true);
-				fileChooser.setFileFilter(new FileFilter() {
-					@Override
-					public String getDescription() {
-						return "Comma-Separated Values (*.csv)";
-					}
-
-					@Override
-					public boolean accept(final File f) {
-						return f.isDirectory() || f.getName().toLowerCase().endsWith(".csv");
-					}
-				});
-				final int option = fileChooser.showOpenDialog(MainFrame.this);
-				if (option != APPROVE_OPTION) {
-					return;
+		mntmOpen.addActionListener(e -> {
+			final JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setCurrentDirectory(new File(getProperty("user.dir")));
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			fileChooser.setFileSelectionMode(FILES_ONLY);
+			fileChooser.setDialogType(OPEN_DIALOG);
+			fileChooser.setMultiSelectionEnabled(true);
+			fileChooser.setFileFilter(new FileFilter() {
+				@Override
+				public String getDescription() {
+					return "Comma-Separated Values (*.csv)";
 				}
-				MainFrame.this.selectedFiles = fileChooser.getSelectedFiles();
-				MainFrame.this.btnRun.setEnabled(MainFrame.this.selectedFiles.length > 0);
+
+				@Override
+				public boolean accept(final File f) {
+					return f.isDirectory() || f.getName().toLowerCase().endsWith(".csv");
+				}
+			});
+			final int option = fileChooser.showOpenDialog(MainFrame.this);
+			if (option != APPROVE_OPTION) {
+				return;
 			}
+			MainFrame.this.selectedFiles = fileChooser.getSelectedFiles();
+			MainFrame.this.btnRun.setEnabled(MainFrame.this.selectedFiles.length > 0);
 		});
 		mntmOpen.setMnemonic('O');
 		mntmOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
@@ -271,12 +244,7 @@ public final class MainFrame extends JFrame {
 		mnFile.add(separator);
 
 		final JMenuItem mntmExit = new JMenuItem("Exit");
-		mntmExit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				exit(0);
-			}
-		});
+		mntmExit.addActionListener(e -> exit(0));
 		mntmExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.ALT_MASK));
 		mntmExit.setMnemonic('X');
 		mnFile.add(mntmExit);

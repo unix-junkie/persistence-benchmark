@@ -11,7 +11,6 @@ public final class TestResult {
 	 * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
 	 */
 	private static enum TestStatus {
-		@SuppressWarnings("hiding")
 		NO_DATA,
 		SUCCESS,
 		FAILURE,

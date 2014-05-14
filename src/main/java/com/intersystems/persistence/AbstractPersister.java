@@ -84,15 +84,7 @@ public abstract class AbstractPersister implements Persister {
 
 	private void fireContentsChanged() {
 		if (this.listModel != null) {
-			invokeLater(new Runnable() {
-				/**
-				 * @see Runnable#run()
-				 */
-				@Override
-				public void run() {
-					AbstractPersister.this.listModel.setElementAt(AbstractPersister.this, AbstractPersister.this.index);
-				}
-			});
+			invokeLater(() -> AbstractPersister.this.listModel.setElementAt(AbstractPersister.this, AbstractPersister.this.index));
 		}
 	}
 }
