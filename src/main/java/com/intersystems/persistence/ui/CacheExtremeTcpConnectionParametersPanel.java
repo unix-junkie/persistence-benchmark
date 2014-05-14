@@ -170,7 +170,7 @@ public final class CacheExtremeTcpConnectionParametersPanel extends CacheExtreme
 		gbc_chckbxUseFlatSchema.gridy = 0;
 		panel_2.add(chckbxUseFlatSchema, gbc_chckbxUseFlatSchema);
 
-		final JCheckBox chckbxSuspendJournalling = new JCheckBox("Suspend Journalling (2013.2+)");
+		final JCheckBox chckbxSuspendJournalling = new JCheckBox("Suspend Journalling (2014.1+)");
 		chckbxSuspendJournalling.setEnabled(false);
 		chckbxSuspendJournalling.setSelected(connectionParameters.getSuspendJournalling());
 		final GridBagConstraints gbc_chckbxSuspendJournalling = new GridBagConstraints();

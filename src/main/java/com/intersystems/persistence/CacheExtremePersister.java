@@ -133,7 +133,7 @@ public final class CacheExtremePersister extends AbstractPersister {
 			final boolean is20132Plus = major > 2013 || major == 2013 && minor >= 2;
 			if (this.connectionParameters.getSuspendJournalling() && is20132Plus) {
 				/*
-				 * We're only suspending journalling on 2013.2+ (see below).
+				 * We're only suspending journalling on 2014.1+ (former 2013.2, see below).
 				 */
 				this.persister.callProcedure("DISABLE", "%NOJRN");
 			}
