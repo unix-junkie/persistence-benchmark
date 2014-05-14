@@ -50,8 +50,7 @@ public abstract class JdbcPersister extends AbstractPersister {
 		}
 
 		try {
-			final Statement stmt = this.conn.createStatement();
-			try {
+			try (final Statement stmt = this.conn.createStatement()) {
 				try {
 					stmt.executeUpdate(this.getCreateSql(this.conn.getMetaData()));
 					this.conn.commit();
@@ -66,8 +65,6 @@ public abstract class JdbcPersister extends AbstractPersister {
 
 					return new TestResult(sqle);
 				}
-			} finally {
-				stmt.close();
 			}
 		} catch (final SQLException sqle) {
 			printExceptionChain(sqle, System.out);

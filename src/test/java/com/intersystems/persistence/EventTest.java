@@ -50,9 +50,8 @@ public final class EventTest {
 		assertEquals(e0, readAll(serializedSingle)[0]);
 
 		final int maxStringLength = 3000000;
-		final ByteArrayOutputStream out0 = new ByteArrayOutputStream(maxStringLength);
 		int eventCount = 0;
-		try {
+		try (final ByteArrayOutputStream out0 = new ByteArrayOutputStream(maxStringLength)) {
 			final int serializedLength = serializedSingle.length;
 			/*
 			 * In real life, once the buffer is full we'll be
@@ -62,21 +61,19 @@ public final class EventTest {
 				out0.write(serializedSingle);
 				eventCount++;
 			}
-		} finally {
 			out0.flush();
-			out0.close();
-		}
 
-		assertTrue(out0.size() <= maxStringLength);
-		final byte serializedMultiple[] = out0.toByteArray();
-		try {
-			Event.valueOf(serializedMultiple);
-			fail("Reading a single event from a long byte array should fail");
-		} catch (final IllegalArgumentException iae) {
-			assertTrue(true);
+			assertTrue(out0.size() <= maxStringLength);
+			final byte serializedMultiple[] = out0.toByteArray();
+			try {
+				Event.valueOf(serializedMultiple);
+				fail("Reading a single event from a long byte array should fail");
+			} catch (final IllegalArgumentException iae) {
+				assertTrue(true);
+			}
+			System.out.println(eventCount + " event(s) written; array length " + out0.size());
+			assertEquals(eventCount, readAll(serializedMultiple).length);
 		}
-		System.out.println(eventCount + " event(s) written; array length " + out0.size());
-		assertEquals(eventCount, readAll(serializedMultiple).length);
 
 		/*
 		 * Now almost the same tests as above,
@@ -115,22 +112,16 @@ public final class EventTest {
 		/*
 		 * Allocating at least compressed.length bytes.
 		 */
-		final ByteArrayOutputStream out = new ByteArrayOutputStream(compressed.length);
-		try {
-			final InputStream in = new GZIPInputStream(new ByteArrayInputStream(compressed), compressed.length);
-			try {
+		try (final ByteArrayOutputStream out = new ByteArrayOutputStream(compressed.length)) {
+			try (final InputStream in = new GZIPInputStream(new ByteArrayInputStream(compressed), compressed.length)) {
 				int b;
 				while ((b = in.read()) != -1) {
 					out.write(b);
 				}
-			} finally {
-				in.close();
 			}
 			out.flush();
-		} finally {
-			out.close();
-		}
 
-		return out.toByteArray();
+			return out.toByteArray();
+		}
 	}
 }

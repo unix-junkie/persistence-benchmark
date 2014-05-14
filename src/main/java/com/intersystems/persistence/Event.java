@@ -161,7 +161,7 @@ public final class Event {
 			return EMPTY;
 		}
 
-		final List<Event> events = new ArrayList<Event>();
+		final List<Event> events = new ArrayList<>();
 
 		final ByteBuffer buffer = wrap(data);
 		try {

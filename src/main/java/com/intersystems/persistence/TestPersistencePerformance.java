@@ -45,8 +45,7 @@ public abstract class TestPersistencePerformance {
 		long count = 0;
 		for (final File file : files) {
 			try {
-				final BufferedReader in = new BufferedReader(new FileReader(file));
-				try {
+				try (final BufferedReader in = new BufferedReader(new FileReader(file))) {
 					String line;
 					long localCount = 0;
 					while ((line = in.readLine()) != null) {
@@ -65,8 +64,6 @@ public abstract class TestPersistencePerformance {
 						localCount--;
 					}
 					count += localCount;
-				} finally {
-					in.close();
 				}
 			} catch (final IOException ioe) {
 				System.out.println(ioe.getMessage());

@@ -80,12 +80,9 @@ public final class EventWriter {
 	 */
 	private static byte[] compressBatch(final byte batch[]) throws IOException {
 		final ByteArrayOutputStream out0 = new ByteArrayOutputStream();
-		final OutputStream out1 = new GZIPOutputStream(out0);
-		try {
+		try (final OutputStream out1 = new GZIPOutputStream(out0)) {
 			out1.write(batch);
 			out1.flush();
-		} finally {
-			out1.close();
 		}
 		return out0.toByteArray();
 	}

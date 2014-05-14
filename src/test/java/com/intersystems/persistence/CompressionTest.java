@@ -291,12 +291,9 @@ public final class CompressionTest {
 		/*
 		 * Don't rely on system-default encoding when performing char to byte conversion.
 		 */
-		final BufferedWriter out1 = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(out0), "UTF-8"));
-		try {
+		try (final BufferedWriter out1 = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(out0), "UTF-8"))) {
 			out1.write(original);
 			out1.flush();
-		} finally {
-			out1.close();
 		}
 		return out0.toByteArray();
 	}
@@ -313,14 +310,11 @@ public final class CompressionTest {
 		/*
 		 * Don't rely on system-default encoding when performing byte to char conversion.
 		 */
-		final BufferedReader in = new BufferedReader(new InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(compressed)), "UTF-8"));
-		try {
+		try (final BufferedReader in = new BufferedReader(new InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(compressed)), "UTF-8"))) {
 			String line;
 			while ((line = in.readLine()) != null) {
 				builder.append(line);
 			}
-		} finally {
-			in.close();
 		}
 
 		return builder;

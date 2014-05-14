@@ -26,7 +26,7 @@ public interface Persister {
 	 * @param listModel
 	 * @param index
 	 */
-	void setListModel(DefaultListModel listModel, final int index);
+	void setListModel(final DefaultListModel<Persister> listModel, final int index);
 
 	/**
 	 * @return a shared copy used for state transfer.

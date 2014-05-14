@@ -146,14 +146,14 @@ public final class MainFrame extends JFrame {
 		gbc_statusBar.gridheight = REMAINDER;
 		this.getContentPane().add(statusBar, gbc_statusBar);
 
-		final DefaultListModel listModel = new DefaultListModel();
+		final DefaultListModel<Persister> listModel = new DefaultListModel<>();
 		int i = 0;
 		for (final Persister persister : persisters) {
 			listModel.addElement(persister);
 			persister.setListModel(listModel, i++);
 		}
 
-		final JList list = new JList();
+		final JList<Persister> list = new JList<>();
 		list.setModel(listModel);
 		list.setCellRenderer(new PersisterListCellRenderer());
 		scrollPane.setViewportView(list);

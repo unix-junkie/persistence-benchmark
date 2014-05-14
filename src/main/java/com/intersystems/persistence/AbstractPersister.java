@@ -17,7 +17,7 @@ public abstract class AbstractPersister implements Persister {
 
 	private volatile TestResult testResult = TestResult.NO_DATA;
 
-	DefaultListModel listModel;
+	DefaultListModel<Persister> listModel;
 
 	int index;
 
@@ -77,7 +77,7 @@ public abstract class AbstractPersister implements Persister {
 	 * @see Persister#setListModel(DefaultListModel, int)
 	 */
 	@Override
-	public final void setListModel(final DefaultListModel listModel, final int index) {
+	public final void setListModel(final DefaultListModel<Persister> listModel, final int index) {
 		this.listModel = listModel;
 		this.index = index;
 	}
