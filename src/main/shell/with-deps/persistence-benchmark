@@ -5,6 +5,7 @@
 
 CLASSPATH="\
 `dirname $0`/../share/java/${project.artifactId}-${project.version}.jar:\
+`dirname $0`/../share/${project.artifactId}/cachedb-${intersystems.cache.version}.jar:\
 `dirname $0`/../share/${project.artifactId}/cacheextreme-${intersystems.cache.version}.jar:\
 `dirname $0`/../share/${project.artifactId}/cachejdbc-${intersystems.cache.version}.jar:\
 `dirname $0`/../share/${project.artifactId}/derby-${derby.version}.jar:\
