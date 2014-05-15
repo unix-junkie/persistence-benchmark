@@ -77,7 +77,6 @@ public abstract class TestPersistencePerformance {
 
 	/**
 	 * @param args
-	 * @throws IOException
 	 */
 	public static void main(final String args[]) {
 		final String host = getProperty("benchmark.host", "localhost");
