@@ -11,6 +11,39 @@
 	<artifactId>persistence-benchmark</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
+	<name>Persistence Benchmark</name>
+	<description>Caché eXtreme Persistence benchmark</description>
+	<url>https://unix-junkie.github.io/persistence-benchmark</url>
+	<inceptionYear>2013</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>GNU General Public License Version 3</name>
+			<url>https://www.gnu.org/licenses/gpl-3.0-standalone.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>https://github.com/unix-junkie/persistence-benchmark</url>
+		<connection>scm:git:git@github.com:unix-junkie/persistence-benchmark.git</connection>
+		<developerConnection>scm:git:git@github.com:unix-junkie/persistence-benchmark.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<issueManagement>
+		<url>https://github.com/unix-junkie/persistence-benchmark/issues</url>
+	</issueManagement>
+
+	<developers>
+		<developer>
+			<id>unix-junkie</id>
+			<name>Andrew ``Bass'' Shcheglov</name>
+			<email>andrewbass@gmail.com</email>
+			<url>https://github.com/unix-junkie</url>
+		</developer>
+	</developers>
+
 	<properties>
 		<project.build.sourceEncoding>US-ASCII</project.build.sourceEncoding>
 		<project.build.shellSourceDirectory>${basedir}/src/main/shell</project.build.shellSourceDirectory>
@@ -20,6 +53,7 @@
 		<derby.version>10.9.1.0</derby.version>
 		<oracle.version>11.2.0.3.0</oracle.version>
 		<emacsMode>true</emacsMode>
+		<javadoc.plugin.version>2.9.1</javadoc.plugin.version>
 	</properties>
 
 	<build>
@@ -47,7 +81,7 @@
 					<execution>
 						<id>attach-sources</id>
 						<goals>
-							<goal>jar</goal>
+							<goal>jar-no-fork</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -55,7 +89,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>${javadoc.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -76,6 +110,29 @@
 						<goals>
 							<goal>javadoc</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>1.3.1</version>
+				<executions>
+					<execution>
+						<id>enforce-versions</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireJavaVersion>
+									<version>1.8</version>
+								</requireJavaVersion>
+								<requireMavenVersion>
+									<version>3.0</version>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -103,6 +160,33 @@
 
 	<profiles>
 		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
 			<id>doclint-java8-disable</id>
 			<activation>
 				<jdk>[1.8,</jdk>
@@ -113,13 +197,26 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.9.1</version>
+						<version>${javadoc.plugin.version}</version>
 						<configuration>
 							<additionalparam>-Xdoclint:none -quiet</additionalparam>
 						</configuration>
 					</plugin>
 				</plugins>
 			</build>
+
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>${javadoc.plugin.version}</version>
+						<configuration>
+							<additionalparam>-Xdoclint:none -quiet</additionalparam>
+						</configuration>
+					</plugin>
+				</plugins>
+			</reporting>
 		</profile>
 	</profiles>
 
@@ -155,5 +252,20 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>1.3.9</version>
+		</dependency>
 	</dependencies>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${javadoc.plugin.version}</version>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
