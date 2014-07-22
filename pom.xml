@@ -49,7 +49,7 @@
 		<project.build.shellSourceDirectory>${basedir}/src/main/shell</project.build.shellSourceDirectory>
 		<project.build.resourceDirectory>${basedir}/src/main/resources</project.build.resourceDirectory>
 		<exec.mainClass>com.intersystems.persistence.TestPersistencePerformance</exec.mainClass>
-		<intersystems.cache.version>2014.1.0.608.0</intersystems.cache.version>
+		<intersystems.cache.version>2014.1.1.702.1</intersystems.cache.version>
 		<derby.version>10.9.1.0</derby.version>
 		<oracle.version>11.2.0.3.0</oracle.version>
 		<emacsMode>true</emacsMode>
