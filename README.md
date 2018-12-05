@@ -203,4 +203,4 @@ _Caché_, то кэш программ (routine cache) был увеличен �
  - _Maven_ 
  - _[Maven Install Plugin](https://maven.apache.org/plugins/maven-install-plugin/)_
  для создания локальных артефактов _Caché JDBC_ и _Caché eXTreme_, и, наконец,
- - _Caché_.
+ - _Caché_ 2018.1+.
