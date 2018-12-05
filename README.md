@@ -148,6 +148,24 @@ NASDAQ100,0,20130802,09:34:10,3 124.090000000,421 928
 NASDAQ100,0,20130802,09:35:11,3 125.180000000,681 585
 ```
 
+Код класса _Caché_, моделирующего вышеприведённую структуру, может выглядеть вот
+так:
+
+```
+Class com.intersystems.persistence.objbinding.Event Extends %Persistent [ ClassType = persistent, DdlAllowed, Final, SqlTableName = Event ]
+{
+Property Ticker As %String(MAXLEN = 32);
+
+Property Per As %Integer(MAXVAL = 2147483647, MINVAL = -2147483648);
+
+Property TimeStamp As %TimeStamp;
+
+Property Last As %Double;
+
+Property Vol As %Integer(MAXVAL = 9223372036854775807, MINVAL = -9223372036854775810);
+}
+```
+
 Также был написан некий наивный тестовый код. Оправданием "наивности" может
 послужить то, что мы измеряем всё-таки не скорость кода, сгенерированного _JIT_,
 а скорость, с которой не имеющий отношения к _JVM_ код (за исключением _Apache
