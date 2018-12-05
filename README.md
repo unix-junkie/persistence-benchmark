@@ -60,26 +60,8 @@ by Luis Manuel Sarro, Laurent Eyer, William O'Mullane, Joris De Ridder, pp.
  и _[Node.js](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BXJS)_).
  Этот подход характеризуется прямым доступом к низкоуровневому представлению
  данных (т. наз. "глобалам" – квантам информации в мире _Caché_), обеспечивающим
- очень высокую скорость работы.
-
-Если взглянуть на высокоуровневую архитектуру _Caché eXTreme_, то она достаточно
-проста:
-
-![Архитектура _Caché eXTreme_](images/architecture.png)
-
-На диаграмме:
-
- - _[Globals API](https://docs.intersystems.com/ens20162/csp/docbook/DocBook.UI.Page.cls?KEY=BXJV_globals)_
- обеспечивает быстрый низкоуровневый доступ к глобалам.
-
- - _[Caché XDO](https://docs.intersystems.com/ens20152/csp/docbook/DocBook.UI.Page.cls?KEY=BXJV_dynamic)_
- – это быстрый "динамический" доступ к данным, не требующий присутствия
- объектной модели на стороне клиента. Ближайший аналог из мира Java – это
- _[Reflection](https://en.wikipedia.org/wiki/Reflection_%28computer_programming%29#Java)_.
-
- - Наконец, модуль _[Caché XEP](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BXJV_xep)_,
- также опирающийся на _Globals API_, предоставляет быстрый объектный и
- квази-реляционный доступ к данным.
+ очень высокую скорость работы. Библиотека _[Caché XEP](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BXJV_xep)_
+ одновременно предоставляет объектный и квази-реляционный доступ к данным.
 
    - Объектный – в том смысле, что клиенту API не нужно заботиться об
    объектно-реляционном отображении: по образу и подобию объектной модели Java
