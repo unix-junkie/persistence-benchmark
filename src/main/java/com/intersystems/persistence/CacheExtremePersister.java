@@ -7,11 +7,10 @@ import static java.lang.System.getProperty;
 
 import java.sql.DatabaseMetaData;
 
-import com.intersys.globals.GlobalsException;
-import com.intersys.util.VersionInfo;
-import com.intersys.xep.EventPersister;
-import com.intersys.xep.PersisterFactory;
-import com.intersys.xep.XEPException;
+import com.intersystems.util.VersionInfo;
+import com.intersystems.xep.EventPersister;
+import com.intersystems.xep.PersisterFactory;
+import com.intersystems.xep.XEPException;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
@@ -21,7 +20,7 @@ public final class CacheExtremePersister extends AbstractPersister {
 
 	private EventPersister persister;
 
-	private com.intersys.xep.Event persisterEvent;
+	private com.intersystems.xep.Event persisterEvent;
 
 	/**
 	 * @param namespace

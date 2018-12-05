@@ -5,8 +5,8 @@ package com.intersystems.persistence;
 
 import java.sql.DatabaseMetaData;
 
-import com.intersys.jdbc.CacheDriver;
-import com.intersys.util.VersionInfo;
+import com.intersystems.jdbc.IRISDriver;
+import com.intersystems.util.VersionInfo;
 
 /**
  * @author Andrey Shcheglov &lt;mailto:andrey.shcheglov@intersystems.com&gt;
@@ -53,8 +53,8 @@ public class CacheJdbcPersister extends JdbcPersister {
 	 * @see JdbcPersister#getDriverClass()
 	 */
 	@Override
-	protected final Class<CacheDriver> getDriverClass() {
-		return CacheDriver.class;
+	protected final Class<IRISDriver> getDriverClass() {
+		return IRISDriver.class;
 	}
 
 	/**

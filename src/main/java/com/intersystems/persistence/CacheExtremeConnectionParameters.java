@@ -3,7 +3,7 @@
  */
 package com.intersystems.persistence;
 
-import com.intersys.xep.annotations.Id;
+import com.intersystems.xep.annotations.Id;
 import com.intersystems.persistence.ui.CacheExtremeConnectionParametersPanel;
 import com.intersystems.persistence.ui.CacheExtremeShmConnectionParametersPanel;
 import com.intersystems.persistence.ui.CacheExtremeTcpConnectionParametersPanel;
