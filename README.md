@@ -49,10 +49,8 @@ by Luis Manuel Sarro, Laurent Eyer, William O'Mullane, Joris De Ridder, pp.
  достаточно низким быстродействием: "по проводам" передаётся достаточно много
  служебных метаданных, описывающих объектную модель.
  
- - JDBC и всевозможные надстройки
- (_[Jalapeño](https://docs.intersystems.com/ens20162/csp/docbook/DocBook.UI.Page.cls?KEY=GBJJ)_,
- _Hibernate_, _JPA_). Здесь я, наверное, не скажу ничего нового, кроме того, что
- _Caché_ поддерживает два уровня изоляции транзакций:
+ - JDBC и всевозможные надстройки (_Hibernate_, _JPA_). Здесь я, наверное, не
+ скажу ничего нового, кроме того, что _Caché_ поддерживает два уровня изоляции транзакций:
  [`READ_UNCOMMITTED`](https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html#TRANSACTION_READ_UNCOMMITTED)
  и [`READ_COMMITTED`](https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html#TRANSACTION_READ_COMMITTED)
  – и по умолчанию работает в режиме `READ_UNCOMMITTED`.
