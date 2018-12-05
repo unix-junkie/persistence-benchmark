@@ -138,7 +138,7 @@ by Luis Manuel Sarro, Laurent Eyer, William O'Mullane, Joris De Ridder, pp.
 Авторам было интересно, как ведёт себя _Caché eXTreme_ в задаче записи
 непрерывного потока данных по сравнению с популярными технологиями обработки
 данных. В качестве источника данных с сайта холдинга
-"[Финам](https://www.finam.ru/analysis/profile041CA00007/default.asp)"
+"[Финам](https://www.finam.ru/profile/mirovye-indeksy/nasdaq/export/)"
 были взяты исторические котировки в CSV-формате. Пример файла с данными:
 
 ```
