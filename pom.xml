@@ -38,14 +38,14 @@
 	<developers>
 		<developer>
 			<id>unix-junkie</id>
-			<name>Andrew ``Bass'' Shcheglov</name>
+			<name>Andrey ``Bass'' Shcheglov</name>
 			<email>andrewbass@gmail.com</email>
 			<url>https://github.com/unix-junkie</url>
 		</developer>
 	</developers>
 
 	<properties>
-		<project.build.sourceEncoding>US-ASCII</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.shellSourceDirectory>${basedir}/src/main/shell</project.build.shellSourceDirectory>
 		<project.build.resourceDirectory>${basedir}/src/main/resources</project.build.resourceDirectory>
 		<exec.mainClass>com.intersystems.persistence.TestPersistencePerformance</exec.mainClass>
@@ -61,7 +61,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.7.0</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -227,9 +227,9 @@
 			<version>10.9.1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc6</artifactId>
-			<version>11.2.0.3.0</version>
+			<groupId>com.oracle.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<version>[12.2.0.1,)</version>
 		</dependency>
 		<dependency>
 			<groupId>com.intersystems</groupId>
@@ -249,7 +249,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>[4.12,)</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
