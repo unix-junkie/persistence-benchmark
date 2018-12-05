@@ -12,7 +12,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<name>Persistence Benchmark</name>
-	<description>Caché eXtreme Persistence benchmark</description>
+	<description>Caché eXTreme Persistence benchmark</description>
 	<url>https://unix-junkie.github.io/persistence-benchmark</url>
 	<inceptionYear>2013</inceptionYear>
 

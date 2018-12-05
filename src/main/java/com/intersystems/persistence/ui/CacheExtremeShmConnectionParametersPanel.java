@@ -138,6 +138,6 @@ public final class CacheExtremeShmConnectionParametersPanel extends CacheExtreme
 	 */
 	@Override
 	public String getName() {
-		return "Cach\u00e9 eXtreme (SHM)";
+		return "Cach\u00e9 eXTreme (SHM)";
 	}
 }

@@ -188,6 +188,6 @@ public final class CacheExtremeTcpConnectionParametersPanel extends CacheExtreme
 	 */
 	@Override
 	public String getName() {
-		return "Cach\u00e9 eXtreme (TCP)";
+		return "Cach\u00e9 eXTreme (TCP)";
 	}
 }

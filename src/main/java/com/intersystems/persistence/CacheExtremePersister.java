@@ -68,7 +68,7 @@ public final class CacheExtremePersister extends AbstractPersister {
 	 */
 	@Override
 	public String getClientVersion() {
-		return "InterSystems Cach\u00e9 eXtreme " + VersionInfo.getClientVersion()
+		return "InterSystems Cach\u00e9 eXTreme " + VersionInfo.getClientVersion()
 				+ " (" + (this.connectionParameters.useShm() ? "SHM" : "TCP") + "; "
 				+ (this.connectionParameters.getSuspendJournalling() ? '-' : '+') + "J; "
 				+ (this.connectionParameters.isFlatSchema() ? "flat" : "full") + " schema)";
