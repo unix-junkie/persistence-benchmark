@@ -4,7 +4,7 @@
 
 5 лет назад, 19 декабря 2013 года был запущен спутниковый телескоп _Gaia_.
 Подробно о миссии Gaia можно прочитать на
-[сайте Европейского Космического Агентства](https://sci.esa.int/gaia/) и в статье
+[сайте Европейского Космического Агентства](http://sci.esa.int/gaia/) и в статье
 Виталия Егорова (см.
 [Billion pixels for a billion stars](https://translate.google.com/translate?sl=ru&tl=en&u=https%3A%2F%2Fzelenyikot.livejournal.com%2F25742.html)).
 
