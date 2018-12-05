@@ -49,9 +49,9 @@
 		<project.build.shellSourceDirectory>${basedir}/src/main/shell</project.build.shellSourceDirectory>
 		<project.build.resourceDirectory>${basedir}/src/main/resources</project.build.resourceDirectory>
 		<exec.mainClass>com.intersystems.persistence.TestPersistencePerformance</exec.mainClass>
-		<intersystems.cache.version>2014.1.1.702.1</intersystems.cache.version>
-		<derby.version>10.9.1.0</derby.version>
-		<oracle.version>11.2.0.3.0</oracle.version>
+		<intersystems.cache.version>3.0.0</intersystems.cache.version>
+		<derby.version>[10.14.2.0,)</derby.version>
+		<oracle.version>[12.2.0.1,)</oracle.version>
 		<emacsMode>true</emacsMode>
 		<javadoc.plugin.version>2.9.1</javadoc.plugin.version>
 	</properties>
@@ -224,26 +224,21 @@
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
-			<version>10.9.1.0</version>
+			<version>${derby.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.oracle.jdbc</groupId>
 			<artifactId>ojdbc8</artifactId>
-			<version>[12.2.0.1,)</version>
+			<version>${oracle.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.intersystems</groupId>
-			<artifactId>cachejdbc</artifactId>
+			<artifactId>intersystems-jdbc</artifactId>
 			<version>${intersystems.cache.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.intersystems</groupId>
-			<artifactId>cacheextreme</artifactId>
-			<version>${intersystems.cache.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.intersystems</groupId>
-			<artifactId>cachedb</artifactId>
+			<artifactId>intersystems-xep</artifactId>
 			<version>${intersystems.cache.version}</version>
 		</dependency>
 		<dependency>
