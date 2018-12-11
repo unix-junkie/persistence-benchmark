@@ -88,7 +88,7 @@ Summing up, here's what we have:
  - import of the Java class hierarchy;
  - instant relational access to data – you can work with _Caché_ classes the way
  you work with tables;
- - support of indexes and transactions via _Caché eXTreme_;
+ - support of indices and transactions via _Caché eXTreme_;
  - support of simple SQL queries via _Caché eXTreme_;
  - support of arbitrary SQL queries via a JDBC connection that _eXTreme_ is
  based on.
