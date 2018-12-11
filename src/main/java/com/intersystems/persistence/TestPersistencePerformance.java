@@ -98,9 +98,7 @@ public abstract class TestPersistencePerformance {
 			new CacheResultSetPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
 			new CacheSqlStatementPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
 			new CacheJdbcPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
-			new CacheExtremePersister(cacheNamespace, cacheUsername, cachePassword, false, false),
 			new CacheExtremePersister(cacheNamespace, cacheUsername, cachePassword, false, false, host, cachePort),
-			new CacheExtremePersister(cacheNamespace, cacheUsername, cachePassword, true, false),
 			new CacheExtremePersister(cacheNamespace, cacheUsername, cachePassword, true, false, host, cachePort),
 		};
 

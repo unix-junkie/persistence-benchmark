@@ -47,21 +47,6 @@ public final class CacheExtremePersister extends AbstractPersister {
 	}
 
 	/**
-	 * @param namespace
-	 * @param user
-	 * @param password
-	 * @param suspendJournalling
-	 * @param flatSchema
-	 */
-	public CacheExtremePersister(final String namespace,
-			final String user,
-			final String password,
-			final boolean suspendJournalling,
-			final boolean flatSchema) {
-		this(namespace, user, password, suspendJournalling, flatSchema, null, -1);
-	}
-
-	/**
 	 * @see Persister#getClientVersion()
 	 */
 	@Override
