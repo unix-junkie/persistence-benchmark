@@ -18,7 +18,6 @@ import junit.framework.AssertionFailedError;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.intersys.cache.Dataholder;
@@ -154,7 +153,6 @@ public final class StringStackTest {
 	 * @throws CacheException
 	 */
 	@Test
-	@Ignore("This test will fail until PL 116022 is fixed.")
 	public void testMaxString() throws CacheException {
 		/*
 		 * Get the longest possible string from Cache'

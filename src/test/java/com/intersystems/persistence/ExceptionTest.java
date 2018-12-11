@@ -19,6 +19,7 @@ import junit.framework.AssertionFailedError;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.intersys.cache.Dataholder;
@@ -182,6 +183,7 @@ public final class ExceptionTest {
 	 * @throws CacheException
 	 */
 	@Test
+	@Ignore("Fails differently on Caché 2018.1")
 	public void testMaxString() throws CacheException {
 		final String s0 = getLongString(clazz);
 		final String s1 = s0 + '\u0410';
