@@ -200,5 +200,12 @@ _Caché_, то кэш программ (routine cache) был увеличен �
  - _Git_,
  - _Maven_ 
  - _[Maven Install Plugin](https://maven.apache.org/plugins/maven-install-plugin/)_
- для создания локальных артефактов _Caché JDBC_ и _Caché eXTreme_, и, наконец,
+ для [создания локальных артефактов](https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html)
+ _Caché JDBC_ и _Caché eXTreme_:
+    ```
+    $ mvn install:install-file -Dfile=cache-db-2.0.0.jar
+    $ mvn install:install-file -Dfile=cache-extreme-2.0.0.jar
+    $ mvn install:install-file -Dfile=cache-gateway-2.0.0.jar
+    $ mvn install:install-file -Dfile=cache-jdbc-2.0.0.jar
+    ```
  - _Caché_ 2018.1+.
