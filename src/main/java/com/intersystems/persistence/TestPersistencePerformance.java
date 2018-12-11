@@ -86,18 +86,18 @@ public abstract class TestPersistencePerformance {
 		final String cachePassword = getProperty("benchmark.cache.password", "SYS");
 
 		final Persister persisters[] = {
-			new DerbyPersister(getProperty("benchmark.derby.database", "XEP"), true),
+			new DerbyPersister(getProperty("benchmark.derby.database", "XEP"), false),
 			new OraclePersister(host,
 					getInteger("benchmark.oracle.port", 1521).intValue(),
 					getProperty("benchmark.oracle.schema", "XE"),
 					getProperty("benchmark.oracle.username", "SYSTEM"),
 					getProperty("benchmark.oracle.password", "SYSTEM"),
-					true),
-			new FastObjBindingPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
-			new CacheObjBindingPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
-			new CacheResultSetPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
-			new CacheSqlStatementPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
-			new CacheJdbcPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, true),
+					false),
+			new FastObjBindingPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, false),
+			new CacheObjBindingPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, false),
+			new CacheResultSetPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, false),
+			new CacheSqlStatementPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, false),
+			new CacheJdbcPersister(host, cachePort, cacheNamespace, cacheUsername, cachePassword, false),
 			new CacheExtremePersister(cacheNamespace, cacheUsername, cachePassword, false, false, host, cachePort),
 			new CacheExtremePersister(cacheNamespace, cacheUsername, cachePassword, true, false, host, cachePort),
 		};
