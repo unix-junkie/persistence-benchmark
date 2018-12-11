@@ -153,7 +153,7 @@ Property Vol As %Integer(MAXVAL = 9223372036854775807, MINVAL = -922337203685477
 а скорость, с которой не имеющий отношения к _JVM_ код (за исключением _Apache
 Derby_) умеет записывать на диск. Внешний вид окна тестовой программы:
 
-![Caché eXTreme Persistence Benchmark](persistence-benchmark.png)
+![Caché eXTreme Persistence Benchmark](images/persistence-benchmark.png)
 
 В забеге участвовали:
 
