@@ -60,7 +60,7 @@ following:
  _[.NET](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BXNT)_
  and _[Node.js](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BXJS)_
  editions). This approach is characterized by the direct access to the low-level
- data representation (so-called "globals" – quantums of data in the _Caché_
+ data representation (so-called "globals" – quanta of data in the _Caché_
  world) ensuring high performance. The
  _[Caché XEP](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BXJV_xep)_
  library simultaneously provides object and quasi-relational access to data.
