@@ -5,7 +5,6 @@ package com.intersystems.persistence;
 
 import com.intersys.xep.annotations.Id;
 import com.intersystems.persistence.ui.CacheExtremeConnectionParametersPanel;
-import com.intersystems.persistence.ui.CacheExtremeShmConnectionParametersPanel;
 import com.intersystems.persistence.ui.CacheExtremeTcpConnectionParametersPanel;
 
 /**
@@ -116,19 +115,13 @@ public final class CacheExtremeConnectionParameters implements ConnectionParamet
 		return this.port;
 	}
 
-	public boolean useShm() {
-		return this.host == null || this.host.length() == 0 || this.port < 0 || this.port > 65535;
-	}
-
 	/**
 	 * @see ConnectionParameters#getView()
 	 */
 	@Override
 	public CacheExtremeConnectionParametersPanel getView() {
 		return this.view == null
-				? this.view = this.useShm()
-						? new CacheExtremeShmConnectionParametersPanel(this)
-						: new CacheExtremeTcpConnectionParametersPanel(this)
+				? this.view = new CacheExtremeTcpConnectionParametersPanel(this)
 				: this.view;
 	}
 }

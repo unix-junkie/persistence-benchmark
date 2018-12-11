@@ -3,8 +3,6 @@
  */
 package com.intersystems.persistence;
 
-import static java.lang.System.getProperty;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
@@ -69,7 +67,7 @@ public final class CacheExtremePersister extends AbstractPersister {
 	@Override
 	public String getClientVersion() {
 		return "InterSystems Cach\u00e9 eXTreme " + VersionInfo.getClientVersion()
-				+ " (" + (this.connectionParameters.useShm() ? "SHM" : "TCP") + "; "
+				+ " (TCP; "
 				+ (this.connectionParameters.getSuspendJournalling() ? '-' : '+') + "J; "
 				+ (this.connectionParameters.isFlatSchema() ? "flat" : "full") + " schema)";
 	}
@@ -84,43 +82,19 @@ public final class CacheExtremePersister extends AbstractPersister {
 		final String namespace = this.connectionParameters.getNamespace();
 		final String user = this.connectionParameters.getUser();
 		final String password = this.connectionParameters.getPassword();
-		if (this.connectionParameters.useShm()) {
-			final String osVersion = getProperty("os.version");
-			final String osName = getProperty("os.name");
-			final String javaSpecificationVersion = getProperty("java.specification.version");
-			final String javaVmSpecificationVersion = getProperty("java.vm.specification.version");
-			final boolean isMacOsX = osName.equals("Mac OS X");
-			final boolean isJava16 = javaSpecificationVersion.equals("1.6") && javaVmSpecificationVersion.equals("1.6");
-			if (isMacOsX && !isJava16) {
-				/*
-				 * PL 115230
-				 */
-				return new TestResult("On " + osName + ' ' + osVersion + ", JNI connection is unstable when using Java " + javaSpecificationVersion);
-			}
-
-			try {
-				this.persister.connect(namespace, user, password);
-			} catch (final GlobalsException ge) {
-				/*
-				 * Most probably, an UnsatisfiedLinkError
-				 */
-				return new TestResult(ge);
-			}
-		} else {
-			try {
-				this.persister.connect(this.connectionParameters.getHost(),
-						this.connectionParameters.getPort(), namespace, user, password);
-			} catch (final OutOfMemoryError oome) {
-				/*
-				 * Java heap size needs to be at least 768m
-				 */
-				return new TestResult(oome);
-			} catch (final XEPException xepe) {
-				/*
-				 * Connection failed.
-				 */
-				return new TestResult(xepe);
-			}
+		try {
+			this.persister.connect(this.connectionParameters.getHost(),
+					this.connectionParameters.getPort(), namespace, user, password);
+		} catch (final OutOfMemoryError oome) {
+			/*
+			 * Java heap size needs to be at least 768m
+			 */
+			return new TestResult(oome);
+		} catch (final XEPException xepe) {
+			/*
+			 * Connection failed.
+			 */
+			return new TestResult(xepe);
 		}
 		try {
 			final DatabaseMetaData metaData = this.persister.getMetaData();
