@@ -5,6 +5,9 @@ package com.intersystems.persistence;
 
 import static com.intersys.objects.Database.RET_PRIM;
 import static com.intersystems.persistence.CompressionTest.getLongString;
+import static java.lang.Integer.getInteger;
+import static java.lang.String.format;
+import static java.lang.System.getProperty;
 import static java.lang.System.out;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -45,7 +48,15 @@ public final class ExceptionTest {
 	 */
 	@BeforeClass
 	public static void setUp() throws CacheException {
-		database = new JBindDatabase("jdbc:Cache://localhost:56777/XEP", "_SYSTEM", "SYS");
+		final String host = getProperty("benchmark.host", "localhost");
+		final int cachePort = getInteger("benchmark.cache.port", 1972).intValue();
+		final String cacheNamespace = getProperty("benchmark.cache.namespace", "USER");
+		final String cacheUsername = getProperty("benchmark.cache.username", "_SYSTEM");
+		final String cachePassword = getProperty("benchmark.cache.password", "SYS");
+
+		database = new JBindDatabase(format("jdbc:Cache://%s:%d/%s", host, cachePort, cacheNamespace),
+				cacheUsername,
+				cachePassword);
 		clazz = database.getCacheClass(CACHE_CLASS_NAME);
 	}
 
