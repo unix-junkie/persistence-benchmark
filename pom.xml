@@ -49,7 +49,7 @@
 		<project.build.shellSourceDirectory>${basedir}/src/main/shell</project.build.shellSourceDirectory>
 		<project.build.resourceDirectory>${basedir}/src/main/resources</project.build.resourceDirectory>
 		<exec.mainClass>com.intersystems.persistence.TestPersistencePerformance</exec.mainClass>
-		<intersystems.cache.version>2014.1.1.702.1</intersystems.cache.version>
+		<intersystems.cache.version>[2.0.0, 3.0)</intersystems.cache.version>
 		<derby.version>[10.14.2.0,)</derby.version>
 		<oracle.version>[12.2.0.1,)</oracle.version>
 		<emacsMode>true</emacsMode>
@@ -232,18 +232,18 @@
 			<version>${oracle.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.intersystems</groupId>
-			<artifactId>cachejdbc</artifactId>
+			<groupId>com.intersys</groupId>
+			<artifactId>cache-jdbc</artifactId>
 			<version>${intersystems.cache.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.intersystems</groupId>
-			<artifactId>cacheextreme</artifactId>
+			<groupId>com.intersys</groupId>
+			<artifactId>cache-extreme</artifactId>
 			<version>${intersystems.cache.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.intersystems</groupId>
-			<artifactId>cachedb</artifactId>
+			<groupId>com.intersys</groupId>
+			<artifactId>cache-db</artifactId>
 			<version>${intersystems.cache.version}</version>
 		</dependency>
 		<dependency>
