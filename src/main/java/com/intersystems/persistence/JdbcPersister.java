@@ -53,13 +53,17 @@ public abstract class JdbcPersister extends AbstractPersister {
 			try (final Statement stmt = this.conn.createStatement()) {
 				try {
 					stmt.executeUpdate(this.getCreateSql(this.conn.getMetaData()));
-					this.conn.commit();
+					if (!this.conn.getAutoCommit()) {
+						this.conn.commit();
+					}
 				} catch (final SQLException sqle) {
 					// ignore
 				}
 				try {
 					stmt.executeUpdate("truncate table events");
-					this.conn.commit();
+					if (!this.conn.getAutoCommit()) {
+						this.conn.commit();
+					}
 				} catch (final SQLException sqle) {
 					printExceptionChain(sqle, System.out);
 
@@ -132,7 +136,9 @@ public abstract class JdbcPersister extends AbstractPersister {
 			}
 
 			try {
-				this.conn.commit();
+				if (!this.conn.getAutoCommit()) {
+					this.conn.commit();
+				}
 			} catch (final SQLException sqle) {
 				printExceptionChain(sqle, System.out);
 			}
