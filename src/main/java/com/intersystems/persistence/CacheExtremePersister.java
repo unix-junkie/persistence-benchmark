@@ -6,8 +6,8 @@ package com.intersystems.persistence;
 import static java.lang.System.getProperty;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 
-import com.intersys.globals.GlobalsException;
 import com.intersys.util.VersionInfo;
 import com.intersys.xep.EventPersister;
 import com.intersys.xep.PersisterFactory;
@@ -123,7 +123,7 @@ public final class CacheExtremePersister extends AbstractPersister {
 			}
 		}
 		try {
-			final DatabaseMetaData metaData = this.persister.getJDBCConnection().getMetaData();
+			final DatabaseMetaData metaData = this.persister.getMetaData();
 			this.setServerVersion(metaData.getDatabaseProductName() + ", version " + metaData.getDatabaseProductVersion() + " at " + metaData.getURL() + '\n'
 					+ this.persister.callClassMethod("%SYSTEM.Version", "GetVersion"));
 			this.setRunning(true);
@@ -205,7 +205,11 @@ public final class CacheExtremePersister extends AbstractPersister {
 			}
 		} finally {
 			if (this.persister != null) {
-				this.persister.close();
+				try {
+					this.persister.close();
+				} catch (final SQLException sqle) {
+					sqle.printStackTrace(System.out);
+				}
 			}
 
 			this.persister = null;
