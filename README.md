@@ -18,7 +18,7 @@ by Luis Manuel Sarro, Laurent Eyer, William O'Mullane, Joris De Ridder, pp.
  - _IBM DB2_,
  - _PostgreSQL_,
  - _[Apache Hadoop](https://hadoop.apache.org/)_,
- - _[Apache Cassandra](https://cassandra.apache.org/)_ и
+ - _[Apache Cassandra](https://cassandra.apache.org/)_ and
  - _InterSystems Caché_ (to be more precise, the _[Caché eXTreme Event Persistence](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BXJV_xep)_
  technology). 
  
@@ -38,19 +38,19 @@ _Caché XEP_?
 
 ## Java technologies in Caché
 
-If you look at the Java API stack provided by _InterSystems_, you will see the
+If you look at the Java API stack provided by _InterSystems_, you will see the
 following:
 
  - The
  _[Caché Object Binding](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BLJV)_
- technology that transparently projects data in Java. In _Caché_ terms, the
+ technology that transparently projects data in Java. In _Caché_ terms, the
  generated Java proxy classes are called exactly like that - projections. This
  approach is the simplest, since it saves the "natural" relations between
  classes in the object model, but doesn't guarantee great performance: a lot of
  service metadata describing the object model is transferred "over the wires".
  
  - JDBC and various add-ons (_Hibernate_, _JPA_). I guess I won't tell you
- anything new here apart from the fact that Caché supports two types of
+ anything new here apart from the fact that Caché supports two types of
  transaction isolation: 
  [`READ_UNCOMMITTED`](https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html#TRANSACTION_READ_UNCOMMITTED)
  and [`READ_COMMITTED`](https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html#TRANSACTION_READ_COMMITTED)
@@ -60,7 +60,7 @@ following:
  _[.NET](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BXNT)_
  and _[Node.js](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BXJS)_
  editions). This approach is characterized by the direct access to the low-level
- data representation (so-called "globals" – quanta of data in the _Caché_
+ data representation (so-called "globals" – quanta of data in the _Caché_
  world) ensuring high performance. The
  _[Caché XEP](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BXJV_xep)_
  library simultaneously provides object and quasi-relational access to data.
@@ -69,28 +69,28 @@ following:
    representation: following the Java object model (even in cases of complex
    multi-layer inheritance),
    [the system automatically creates](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BXJV_xep_import)
-   an object model on the _Caché_ class level (or a DB schema if we want to use
+   an object model on the _Caché_ class level (or a DB schema if we want to use
    the terms of the relational representation).
 
    - Quasi-relational – in the sense that you can
    [run SQL queries](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BXJV_xep_queries)
    against multiple "events" stored in a database (to be exact, requests using 
-   the SQL subset) directly from the context of an _eXTreme_-connection.
+   the SQL subset) directly from the context of an _eXTreme_-connection.
    [Indices](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BXJV_xep_events_indexing)
    and transactions are fully supported as well. Of course, all loaded data
    become immediately accessible via JDBC and a relational representation
    (supporting all the powerful features of ANSI SQL and SQL extensions specific
-   to the _Caché_ dialect), but the access speed will be completely different.
+   to the _Caché_ dialect), but the access speed will be completely different.
 
 Summing up, here's what we have:
 
- - "schema" import (_Caché_ classes are created automatically), including
+ - "schema" import (_Caché_ classes are created automatically), including
  - import of the Java class hierarchy;
- - instant relational access to data – you can work with _Caché_ classes the way
+ - instant relational access to data – you can work with _Caché_ classes the way
  you work with tables;
- - support of indices and transactions via _Caché eXTreme_;
- - support of simple SQL queries via _Caché eXTreme_;
- - support of arbitrary SQL queries via a JDBC connection that _eXTreme_ is
+ - support of indices and transactions via _Caché eXTreme_;
+ - support of simple SQL queries via _Caché eXTreme_;
+ - support of arbitrary SQL queries via a JDBC connection that _eXTreme_ is
  based on.
 
 This approach offers some advantages in comparison with comparable relational
@@ -98,7 +98,7 @@ This approach offers some advantages in comparison with comparable relational
 relational style).
 
 **(Not applicable anymore: JNI support has been dropped)** ~~In addition, note
-that there can be two types of _eXTreme_ connections: one that uses JNI (yet
+that there can be two types of _eXTreme_ connections: one that uses JNI (yet
 requires that the Caché server be accessible locally – the difference with the
 JDBC connection of the second type is that network data transfer is not
 supported), and~~ a regular TCP connection where data transfer is performed using
@@ -106,7 +106,7 @@ a standard JDBC driver of the 4th type.
 
 The "nuance" of configuring the JNI version is the environment set-up:
 
- - the `GLOBALS_HOME` variable has to point to the _Caché_ installation folder
+ - the `GLOBALS_HOME` variable has to point to the _Caché_ installation folder
  and
  - `LD_LIBRARY_PATH` (`DYLD_LIBRARY_PATH` for _Mac OS X_ or `PATH` for
  _Windows_) has to contain `${GLOBALS_HOME}/bin`.
@@ -116,7 +116,7 @@ of _JVM_ (`-Xss2m -Xmx768m`).
 
 ## Some practice
 
-The authors were interested in how _Caché eXTreme_ would behave while writing an
+The authors were interested in how _Caché eXTreme_ would behave while writing an
 uninterrupted stream of data in comparison with other data processing
 technologies. We used historical stock price data in the CSV format from the
 website of the
@@ -132,7 +132,7 @@ NASDAQ100,0,20130802,09:34:10,3 124.090000000,421 928
 NASDAQ100,0,20130802,09:35:11,3 125.180000000,681 585
 ```
 
-The code of the _Caché_ class modeling the above structure might look like this:
+The code of the _Caché_ class modeling the above structure might look like this:
 
 ```
 Class com.intersystems.persistence.objbinding.Event Extends %Persistent [ ClassType = persistent, DdlAllowed, Final, SqlTableName = Event ]
@@ -168,26 +168,26 @@ Note that since tests are somewhat approximate, we saw no practical purpose in
 providing exact numbers: the margin of error is fairly high, while the goal of
 the article is to demonstrate the general tendency. For the same reasons, we are
 not specifying the exact version of JDK and the settings of the garbage
-collector: the server-side JVM 8u191 with `-Xmx2048m -Xss128m` reached a very
-similar level of performance on _Linux_ and _Mac OS X_. Around a million events
+collector: the server-side JVM 8u191 with `-Xmx2048m -Xss128m` reached a very
+similar level of performance on _Linux_ and _Mac OS X_. Around a million events
 were saved in each test; several warm-up runs (up to 10) were performed before
-each test of a particular database. As for _Caché_ settings, the routine cache
+each test of a particular database. As for _Caché_ settings, the routine cache
 was increased to 256 MB and the 8kb database cache was expanded to 1024 MB.
 
 Our testing yielded the following results (the write speed values are expressed
 in events per second (eps), more is better):
 
-![Результаты тестирования](images/test-results.png)
+![Test Results](images/test-results.png)
 
- 1. _Derby_ and other relational DBMS's offer speeds varying from 1000 to 1500
+ 1. _Derby_ and other relational DBMS's offer speeds varying from 1000 to 1500
  eps.
 
- 1. _Caché_ in the JDBC mode gives you a higher speed (from 6000 to 7000 eps),
+ 1. _Caché_ in the JDBC mode gives you a higher speed (from 6000 to 7000 eps),
  but there is a trade-off: the default transaction isolation level, as mentioned
- above, is `READ_UNCOMMITTED`.
+ above, is `READ_UNCOMMITTED`.
 
- 1. The next option, _Caché eXTreme_, gives us 45000-50000 eps in the pure Java
- mode ~~and over 80000 eps when talking to a local Caché instance via JNI~~.
+ 1. The next option, _Caché eXTreme_, gives us 45000-50000 eps in the pure Java
+ mode ~~and over 80000 eps when talking to a local Caché instance via JNI~~.
  
  1. Finally, we took some risk and
  [disabled the transaction log](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=GMSM_management_journaling)
