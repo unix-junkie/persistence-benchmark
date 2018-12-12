@@ -25,7 +25,7 @@ by Luis Manuel Sarro, Laurent Eyer, William O'Mullane, Joris De Ridder, pp.
 Comparing the technologies side-by-side produced the following results ([source](images/book-fragment.png)): 
 
 | Technology   | Time     |
-|--------------|---------:|
+|:-------------|---------:|
 | DB2          | 13min55s |
 | PostgreSQL 8 | 14min50s |
 | PostgreSQL 9 |  6min50s |
@@ -161,28 +161,36 @@ providing exact numbers: the margin of error is fairly high, while the goal of
 the article is to demonstrate the general tendency. For the same reasons, we are
 not specifying the exact version of JDK and the settings of the garbage
 collector: the server-side JVM 8u191 with `-Xmx2048m -Xss128m` reached a very
-similar level of performance on _Linux_ and _Mac OS X_. Around a million events
+similar level of performance on _Linux_ and _Mac OS X_. One million events
 were saved in each test; several warm-up runs (up to 10) were performed before
 each test of a particular database. As for _Caché_ settings, the routine cache
 was increased to 256 MB and the 8kb database cache was expanded to 1024 MB.
 
 Our testing yielded the following results (the write speed values are expressed
-in events per second (eps), more is better):
+in events per second (eps)):
 
-![Test Results](images/test-results.png)
+| Technology | Time, s (less is better) | Write speed, eps (more is better) |
+|:-----------|-----------------:|--:|
+| Apache Derby | 140&plusmn;30 | 7100&plusmn;1300 |
+| Oracle | 780&plusmn;50 | 1290&plusmn;80 |
+| Caché JDBC | 61&plusmn;8 | 17000&plusmn;2000 |
+| Caché eXTreme | 6.7&plusmn;0.8 | 152000&plusmn;17000 |
+| Caché eXTreme, transaction journaling disabled | 6.3&plusmn;0.6 | 162000&plusmn;14000 |
 
- 1. _Derby_ and other relational DBMS's offer speeds varying from 1000 to 1500
+ 1. _Derby_ offers speeds varying from 6200 to 8000
  eps.
+ 
+ 1. _Oracle_ turned out to be as fast as 1290 eps.
 
- 1. _Caché_ in the JDBC mode gives you a higher speed (from 6000 to 7000 eps),
+ 1. _Caché_ in the JDBC mode gives you a higher speed (from 15000 to 18000 eps),
  but there is a trade-off: the default transaction isolation level, as mentioned
  above, is `READ_UNCOMMITTED`.
 
- 1. The next option, _Caché eXTreme_, gives us 45000-50000 eps.
+ 1. The next option, _Caché eXTreme_, gives us 127000 to 167000 eps.
  
  1. Finally, we took some risk and
- [disabled the transaction log](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=GMSM_management_journaling)
- (for a given client process), and managed to achieve the write speed of 100000
+ [disabled the transaction log](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=GCDI_journal_util_NOJRN)
+ (for a given client process), and managed to achieve the write speed of 172000
  eps on a test system.
 
 Those who are interested in more accurate numbers can view the
