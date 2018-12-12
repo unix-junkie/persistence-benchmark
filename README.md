@@ -90,29 +90,21 @@ Summing up, here's what we have:
  you work with tables;
  - support of indices and transactions via _Caché eXTreme_;
  - support of simple SQL queries via _Caché eXTreme_;
- - support of arbitrary SQL queries via a JDBC connection that _eXTreme_ is
- based on.
+ - support of arbitrary SQL queries via the underlying JDBC over TCP connection (_Caché_ uses the standard [Type 4](https://docs.oracle.com/cd/E19509-01/820-5069/ggzbd/index.html) (Direct-to-Database Pure Java) driver).
 
 This approach offers some advantages in comparison with comparable relational
 (higher access speed) and various NoSQL solutions (instant access to data in the
 relational style).
 
-**(Not applicable anymore: JNI support has been dropped)** ~~In addition, note
-that there can be two types of _eXTreme_ connections: one that uses JNI (yet
-requires that the Caché server be accessible locally – the difference with the
-JDBC connection of the second type is that network data transfer is not
-supported), and~~ a regular TCP connection where data transfer is performed using
-a standard JDBC driver of the 4th type.
-
-The "nuance" of configuring the JNI version is the environment set-up:
+The "nuance" of configuring _Caché eXTreme_ prior to connecting is the environment set-up:
 
  - the `GLOBALS_HOME` variable has to point to the _Caché_ installation folder
  and
  - `LD_LIBRARY_PATH` (`DYLD_LIBRARY_PATH` for _Mac OS X_ or `PATH` for
  _Windows_) has to contain `${GLOBALS_HOME}/bin`.
 
-For the TCP version, all you need to do is to increase the stack and heap size
-of _JVM_ (`-Xss2m -Xmx768m`).
+Additionally, you may need to increase the stack and heap size
+of the _JVM_ (`-Xss2m -Xmx768m`).
 
 ## Some practice
 
@@ -186,13 +178,12 @@ in events per second (eps), more is better):
  but there is a trade-off: the default transaction isolation level, as mentioned
  above, is `READ_UNCOMMITTED`.
 
- 1. The next option, _Caché eXTreme_, gives us 45000-50000 eps in the pure Java
- mode ~~and over 80000 eps when talking to a local Caché instance via JNI~~.
+ 1. The next option, _Caché eXTreme_, gives us 45000-50000 eps.
  
  1. Finally, we took some risk and
  [disabled the transaction log](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=GMSM_management_journaling)
  (for a given client process), and managed to achieve the write speed of 100000
- eps ~~for JNI connections~~ on a test system.
+ eps on a test system.
 
 Those who are interested in more accurate numbers can view the
 [source code](https://github.com/unix-junkie/persistence-benchmark). You will
