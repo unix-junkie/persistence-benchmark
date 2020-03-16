@@ -53,7 +53,7 @@
 		<derby.version>[10.14.2.0,)</derby.version>
 		<oracle.version>[12.2.0.1,)</oracle.version>
 		<emacsMode>true</emacsMode>
-		<javadoc.plugin.version>2.9.1</javadoc.plugin.version>
+		<javadoc.plugin.version>3.2.0</javadoc.plugin.version>
 	</properties>
 
 	<build>
